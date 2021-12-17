@@ -262,6 +262,3 @@ class lista{
         sessionStorage.setItem("arbolP", JSON.stringify(arbol))
     }
 }
-
-
-

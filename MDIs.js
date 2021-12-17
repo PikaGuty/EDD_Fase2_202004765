@@ -31,8 +31,11 @@ class Matriz{
     }
 
     mostrar(){
-        
         this.Columnas.mostrar()
+    }
+
+    graficar(){
+        this.Columnas.graficar()
     }
 
 }
@@ -94,6 +97,17 @@ class ListaC{
         }
         return null
     }
+    graficar(){
+        let aux=this.primero
+        
+        while (aux!=null){
+            
+            //console.log("Columna "+aux.dato)
+            aux.listaInterna.graficar_datos(aux.dato)
+            aux=aux.siguiente
+        }
+        return null
+    }
 }
 
 class listaDatos{
@@ -142,6 +156,17 @@ class listaDatos{
         }
         return null
     }
+    graficar_datos(Columna){
+        let aux=this.primero
+        while(aux!=null){
+            console.log("\""+Columna+"c\"->"+aux.dato+";")
+            console.log(aux.dato+"->\""+Columna+"c\";")
+            console.log("\""+aux.valorF+"f\"->"+aux.dato+";")
+            console.log(aux.dato+"->\""+aux.valorF+"f\";")
+            aux=aux.siguiente
+        }
+        return null
+    }
 }
 
 let m = new Matriz();
@@ -150,4 +175,4 @@ m.insertar(5,5,3)
 m.insertar(1,5,7)
 m.insertar(3,2,8)
 m.insertar(1,1,9)
-m.mostrar()
+m.graficar()

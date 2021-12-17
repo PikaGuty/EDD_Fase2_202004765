@@ -11,14 +11,29 @@
 <script type="text/javascript">
     // create a network
     var container = document.getElementById("mynetwork");
-	var DOTstring = lista()
+	var DOTstring = 'digraph Matriz{ \
+node [shape=box];\
+Mt[ label = "Matriz", width = 1.5, group = 1 ];\
+U1211 [label = "12:11"    width = 1.5  group = 1 ];\
+Mt->U1211;\
+A3 [label = "3"    width = 1.5  group = 3 ];\
+Mt->A3;\
+{ rank = same; Mt;A3; }\
+A3_U1211 [label = "Comida" width = 1.5, group = 3 ];\
+A3->A3_U1211;\
+U1211->A3_U1211;\
+{ rank = same; U1211;  A3_U1211; }\
+}'
 	var parsedData = vis.parseDOTNetwork(DOTstring);
 	var data = {
 	    nodes: parsedData.nodes,
 	    edges: parsedData.edges
 	}
     var options = {
-        
+              
+        layout: {
+            
+        },  
                                    
     };
     var network = new vis.Network(container, data, options);

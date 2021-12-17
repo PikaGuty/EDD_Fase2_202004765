@@ -19,11 +19,20 @@ class listaD{
             this.primero = nuevo;
         }else{
             let aux = this.primero;
+            let b=true
             while(aux.siguiente != null){
+                if (dato==aux.dato){
+                    b = false
+                }
                 aux = aux.siguiente;
             };
-            aux.siguiente = nuevo;
-            nuevo.anterior = aux;
+            if (b){
+                aux.siguiente = nuevo;
+                nuevo.anterior = aux;
+            }else{
+                console.log("El cliente con ID "+dato+" ya existe")
+            }
+            
         }
     }
 
@@ -86,18 +95,20 @@ class listaD{
     }
 }
 
-/*let lista = new listaD();
+let lista = new listaD();
 
 lista.insertar(10);
 lista.insertar(12);
 lista.insertar(7);
 lista.insertar(5);
+lista.insertar(12);
+lista.mostrar();
 console.log("Eliminar")
 lista.eliminar(12);
 lista.mostrar();
-lista.generar("ASasasas","asasa");*/
+//lista.generar();
 
-function lista() {
+/*function lista() {
     let lista = new listaD();
     lista.insertar(10);
     lista.insertar(12);
@@ -121,4 +132,4 @@ function lista() {
     let d ='graph grid    {        layout=dot        labelloc = "t"        node [shape=plaintext]        edge [weight=1000 style=dashed color=dimgrey]        A0 -- A1 -- A2         B0 -- B1 -- B2         C0 -- C1 -- C2   A0 -- B0 -- C0       A1 -- B1 -- C1        A2 -- B2 -- C2   }'
 
     return d
-}
+}*/
