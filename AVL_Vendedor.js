@@ -14,8 +14,11 @@ class nodo_avl{
 }
 class arbol_avl{
     constructor(){
+        console.log("Inicializado AVL")
         this.raiz = null;
         this.listaa = null;
+        this.dotM = ''
+        this.busc=null
     }
     insertar(id, nombre, edad, correo, pass){
         let nuevo = new nodo_avl(id, nombre, edad, correo, pass);
@@ -120,10 +123,41 @@ class arbol_avl{
         }
     }
 
+    Tabla(raizA){
+        if (raizA!=null){
+            this.Tabla(raizA.izq);
+            this.tab += '<tr>'
+            this.tab += '<td>'+raizA.id+'</td>'
+            this.tab += '<td>'+raizA.nombre+'</td>'
+            this.tab += '<td>'+raizA.edad+'</td>'
+            this.tab += '<td>'+raizA.correo+'</td>'
+            this.tab += '<td>'+raizA.pass+'</td>'
+            
+            this.tab += '<td>'
+            this.tab += '<button value=\"'+raizA.id+'\" onclick="eliminarV(this.value);VerA(\'Vendedor\');" style="background-color:#C82807 " type="button" class="btn btn-outline-dark"><i class="fas fa-trash"></i></button> </td>'
+            this.tab += '</tr>'
+            
+            
+            this.Tabla(raizA.der);
+        }
+    }
+
+    buscar (id,raizA){
+        console.log("Entre a buscar")
+        if (raizA !=null){
+            if (raizA.id==id){
+                this.busc = raizA;
+            }else if (raizA.id>id){
+                this.buscar(id,raizA.izq)
+            }else if (raizA.id<id){
+                this.buscar(id,raizA.der)
+            }
+        }
+    }
+
     eliminar(id,raizAc,raiz,raizAn){
         if (raizAc!=null){
             if (raizAc.id==id){
-                
                 let listaaaa = new listaAux();
                 this.listaa=JSON.stringify(listaaaa)
                 this.PreOrderL(raiz,id)
@@ -150,12 +184,48 @@ class arbol_avl{
             if (raizA.id != id){
                 list.insertar(raizA.id,raizA.nombre,raizA.edad,raizA.correo,raizA.pass,raizA.clientes,raizA.calendario);
             }
-            var CircularJSON = require('circular-json');
+            const CircularJSON = function(JSON,RegExp){var specialChar="~",safeSpecialChar="\\x"+("0"+specialChar.charCodeAt(0).toString(16)).slice(-2),escapedSafeSpecialChar="\\"+safeSpecialChar,specialCharRG=new RegExp(safeSpecialChar,"g"),safeSpecialCharRG=new RegExp(escapedSafeSpecialChar,"g"),safeStartWithSpecialCharRG=new RegExp("(?:^|([^\\\\]))"+escapedSafeSpecialChar),indexOf=[].indexOf||function(v){for(var i=this.length;i--&&this[i]!==v;);return i},$String=String;function generateReplacer(value,replacer,resolve){var doNotIgnore=false,inspect=!!replacer,path=[],all=[value],seen=[value],mapp=[resolve?specialChar:"[Circular]"],last=value,lvl=1,i,fn;if(inspect){fn=typeof replacer==="object"?function(key,value){return key!==""&&replacer.indexOf(key)<0?void 0:value}:replacer}return function(key,value){if(inspect)value=fn.call(this,key,value);if(doNotIgnore){if(last!==this){i=lvl-indexOf.call(all,this)-1;lvl-=i;all.splice(lvl,all.length);path.splice(lvl-1,path.length);last=this}if(typeof value==="object"&&value){if(indexOf.call(all,value)<0){all.push(last=value)}lvl=all.length;i=indexOf.call(seen,value);if(i<0){i=seen.push(value)-1;if(resolve){path.push((""+key).replace(specialCharRG,safeSpecialChar));mapp[i]=specialChar+path.join(specialChar)}else{mapp[i]=mapp[0]}}else{value=mapp[i]}}else{if(typeof value==="string"&&resolve){value=value.replace(safeSpecialChar,escapedSafeSpecialChar).replace(specialChar,safeSpecialChar)}}}else{doNotIgnore=true}return value}}function retrieveFromPath(current,keys){for(var i=0,length=keys.length;i<length;current=current[keys[i++].replace(safeSpecialCharRG,specialChar)]);return current}function generateReviver(reviver){return function(key,value){var isString=typeof value==="string";if(isString&&value.charAt(0)===specialChar){return new $String(value.slice(1))}if(key==="")value=regenerate(value,value,{});if(isString)value=value.replace(safeStartWithSpecialCharRG,"$1"+specialChar).replace(escapedSafeSpecialChar,safeSpecialChar);return reviver?reviver.call(this,key,value):value}}function regenerateArray(root,current,retrieve){for(var i=0,length=current.length;i<length;i++){current[i]=regenerate(root,current[i],retrieve)}return current}function regenerateObject(root,current,retrieve){for(var key in current){if(current.hasOwnProperty(key)){current[key]=regenerate(root,current[key],retrieve)}}return current}function regenerate(root,current,retrieve){return current instanceof Array?regenerateArray(root,current,retrieve):current instanceof $String?current.length?retrieve.hasOwnProperty(current)?retrieve[current]:retrieve[current]=retrieveFromPath(root,current.split(specialChar)):root:current instanceof Object?regenerateObject(root,current,retrieve):current}var CircularJSON={stringify:function stringify(value,replacer,space,doNotResolve){return CircularJSON.parser.stringify(value,generateReplacer(value,replacer,!doNotResolve),space)},parse:function parse(text,reviver){return CircularJSON.parser.parse(text,generateReviver(reviver))},parser:JSON};return CircularJSON}(JSON,RegExp);
             this.listaa=CircularJSON.stringify(list)
             this.PreOrderL(raizA.izq,id);
             this.PreOrderL(raizA.der,id);
         }
         
+    }
+
+    inicializarClientes(raizA){
+        if(raizA != null){
+            let aux = raizA.clientes
+            //********* Recuperando Objeto **************
+            raizA.clientes = new listaD()
+            Object.assign(raizA.clientes,aux)
+            //*******************************************
+            //console.log(raizA.clientes)
+            this.inicializarClientes(raizA.izq);
+            this.inicializarClientes(raizA.der);
+            
+        }
+    }
+
+    inicializarMes(raizA){
+        if(raizA != null){
+            let aux = raizA.calendario
+            //********* Recuperando Objeto **************
+            raizA.calendario = new listaM()
+            Object.assign(raizA.calendario,aux)
+            //*******************************************
+            //console.log(raizA.calendario)
+            this.inicializarMes(raizA.izq);
+            this.inicializarMes(raizA.der);
+        }
+    }
+
+    inicializarCalendario(raizA){
+        if(raizA != null){
+            raizA.calendario.ini()
+
+            this.inicializarCalendario(raizA.izq);
+            this.inicializarCalendario(raizA.der);
+        }
     }
 
     insertarCliente(id,raizA,idC,nombre,correo){
@@ -176,6 +246,39 @@ class arbol_avl{
             }else{
                 this.insertarMes(id,raizA.izq,mes);
                 this.insertarMes(id,raizA.der,mes);
+            }
+        }
+    }
+
+    insertarEvento(id,raizA,mes,desc,dia,hora){
+        if(raizA != null){
+            if (id==raizA.id){
+                raizA.calendario.insertarE(mes,desc,dia,hora)
+            }else{
+                this.insertarEvento(id,raizA.izq,mes,desc,dia,hora);
+                this.insertarEvento(id,raizA.der,mes,desc,dia,hora);
+            }
+        }
+    }
+
+    mostrarEvento(id,raizA,mes){
+        if(raizA != null){
+            if (id==raizA.id){
+                raizA.calendario.mostrarE(mes)
+            }else{
+                this.mostrarEvento(id,raizA.izq,mes);
+                this.mostrarEvento(id,raizA.der,mes);
+            }
+        }
+    }
+
+    graficarMes(id,raizA,mes){
+        if(raizA != null){
+            if (id==raizA.id){
+                this.dotM=raizA.calendario.graficarM(mes)
+            }else{
+                this.graficarMes(id,raizA.izq,mes);
+                this.graficarMes(id,raizA.der,mes);
             }
         }
     }
@@ -288,17 +391,23 @@ class listaD{
         }else{
             let aux = this.primero;
             let b=true
-            while(aux.siguiente != null){
+            while(aux != null){
                 if (idC==aux.idC){
                     b = false
+                    console.log("false")
                 }
+                aux = aux.siguiente;
+            };
+            aux = this.primero;
+            while(aux.siguiente != null){
                 aux = aux.siguiente;
             };
             if (b){
                 aux.siguiente = nuevo;
                 nuevo.anterior = aux;
             }else{
-                console.log("El cliente con ID "+idC+" ya existe")
+                console.log("El cliente con ID "+idC+" ya existe en la cartera de clientes de: "+idV)
+                alert("El cliente con ID "+idC+" ya existe en la cartera de clientes de: "+idV)
             }
         }
     }
@@ -366,7 +475,7 @@ class listaD{
 class nodoM{
     constructor(mes){
         this.mes = mes;
-        this.calendario = null;
+        this.calendario = new matriz();
         this.siguiente = null;
         this.anterior = null;
     }
@@ -386,10 +495,14 @@ class listaM{
         }else{
             let aux = this.primero;
             let b=true
-            while(aux.siguiente != null){
+            while(aux != null){
                 if (mes==aux.mes){
                     b = false
                 }
+                aux = aux.siguiente;
+            };
+            aux = this.primero;
+            while(aux != null){
                 aux = aux.siguiente;
             };
             if (b){
@@ -399,6 +512,66 @@ class listaM{
                 console.log("El mes "+mes+" ya existe")
             }
         }
+    }
+
+    insertarE(mes,desc,dia,hora){
+        let aux = this.primero;
+        while(aux != null){
+            if (mes == aux.mes){
+                aux.calendario.insertar(desc,dia,hora);
+            }
+            aux = aux.siguiente;
+        };
+    }
+
+    ini(){
+        let aux = this.primero;
+        while(aux != null){
+            let auxx = aux.calendario
+            //********* Recuperando Objeto **************
+            aux.calendario = new matriz()
+            Object.assign(aux.calendario,auxx)
+            //*******************************************
+
+            let auxx_x = aux.calendario.cabecetas_x 
+            //********* Recuperando Objeto **************
+            aux.calendario.cabecetas_x = new lista_cabecera();
+            Object.assign(aux.calendario.cabecetas_x,auxx_x)
+            //*******************************************
+
+            let auxx_y = aux.calendario.cabecetas_y 
+            //********* Recuperando Objeto **************
+            aux.calendario.cabecetas_y = new lista_cabecera();
+            Object.assign(aux.calendario.cabecetas_y,auxx_y)
+            //*******************************************
+
+            //console.log(aux.calendario.cabecetas_x)
+            //console.log(aux.calendario.cabecetas_y)
+            aux = aux.siguiente;
+        };
+    }
+    
+
+    mostrarE(mes){
+        let aux = this.primero;
+        while(aux != null){
+            if (mes == aux.mes){
+                aux.calendario.recorrer_matriz()
+            }
+            aux = aux.siguiente;
+        }
+    }
+
+    graficarM(mes){
+        let aux = this.primero;
+        let dot = ''
+        while(aux != null){
+            if (mes == aux.mes){
+                dot = aux.calendario.graficar_matriz()
+            }
+            aux = aux.siguiente;
+        }
+        return dot
     }
 
     mostrar(){
@@ -496,16 +669,341 @@ class listaAux{
         let arbol = new arbol_avl();
         
         let aux = this.primero;
-        console.log("***** Mostar Lista *****")
         while(aux != null){
-            //console.log(aux.dato)
-            arbol.insertar(aux.dato,aux.nombre,aux.direccion,aux.telefono,aux.correo)
+            console.log(aux.dato)
+            arbol.insertar(aux.dato,aux.nombre,aux.edad,aux.correo)
             aux = aux.siguiente;
         }
-        //sessionStorage.setItem("arbolP", JSON.stringify(arbol))
+        sessionStorage.setItem("avl", JSON.stringify(arbol))
     }
 }
 
+class nodo_interno{
+    constructor(valor,x,y){
+        this.valor = valor;
+        this.x = x;
+        this.y = y;
+        //apuntadores
+        this.sig = null;
+        this.ant = null;
+
+        this.arriba = null;
+        this.abajo = null;
+    }
+}
+
+class lista_interna{
+    constructor(){
+        this.primero = null;
+    }
+
+    insertar_x(valor, x,y){ //para las X usamos sig y ant, y el valor para compara y ordenar es Y
+        let nuevo = new nodo_interno(valor,x,y);
+
+        if(this.primero == null){
+            this.primero = nuevo;
+        }else{
+            if(nuevo.y < this.primero.y){
+                nuevo.sig = this.primero;
+                this.primero.ant = nuevo;
+                this.primero = nuevo;
+            }else{
+                let aux = this.primero;
+                while(aux != null){
+                    if(nuevo.y < aux.y){
+                        nuevo.sig = aux;
+                        nuevo.ant = aux.ant;
+                        aux.ant.sig = nuevo;
+                        aux.ant= nuevo;
+                        break;
+                    }else if(nuevo.x == aux.x && nuevo.y == aux.y){
+                        console.log("La posicion ya esta ocupada-> "+nuevo.x+","+nuevo.y+" con valor "+nuevo.valor);
+                        break;
+                    }else{
+                        if(aux.sig ==null){
+                            aux.sig=nuevo;
+                            nuevo.ant = aux;
+                            break;
+                        }else{
+                            aux = aux.sig;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    insertar_y(valor, x,y){ //para las Y usamos arriba y abajo, y el valor para compara y ordenar es X
+        let nuevo = new nodo_interno(valor,x,y);
+
+        if(this.primero == null){
+            this.primero = nuevo;
+        }else{
+            if(nuevo.x < this.primero.x){
+                nuevo.abajo = this.primero;
+                this.primero.arriba = nuevo;
+                this.primero = nuevo;
+            }else{
+                let aux = this.primero;
+                while(aux != null){
+                    if(nuevo.x < aux.x){
+                        nuevo.abajo = aux;
+                        nuevo.arriba = aux.arriba;
+                        aux.arriba.abajo = nuevo;
+                        aux.arriba= nuevo;
+                        break;
+                    }else if(nuevo.x == aux.x && nuevo.y == aux.y){
+                        console.log("La posicion ya esta ocupada-> "+nuevo.x+","+nuevo.y+" con valor "+nuevo.valor);
+                        break;
+                    }else{
+                        if(aux.abajo ==null){
+                            aux.abajo=nuevo;
+                            nuevo.arriba = aux;
+                            break;
+                        }else{
+                            aux = aux.abajo;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    recorrer_x(){
+        let aux = this.primero;
+        while(aux != null){
+            console.log("valor =",aux.valor," - x = ",aux.x , " y = ",aux.y);
+            aux = aux.sig;
+        }
+    }
+    recorrer_y(){
+        let aux = this.primero;
+        while(aux != null){
+            console.log("valor =",aux.valor," - x = ",aux.x , " y = ",aux.y);
+            aux = aux.abajo;
+        }
+    }
+}
+
+class nodo_cabecera{
+    constructor(dato){
+        this.dato = dato;
+        this.sig= null;
+        this.ant = null;
+        this.lista_interna = new lista_interna();
+    }
+}
+
+class lista_cabecera{
+    constructor(){
+        this.primero = null;
+    }
+
+    insertar_cabecera(nuevo){
+
+        if(this.primero == null){
+            this.primero = nuevo;
+        }else{
+            if(nuevo.dato<this.primero.dato){
+                nuevo.sig = this.primero;
+                this.primero.ant=nuevo;
+                this.primero = nuevo;
+            }else{
+                let aux = this.primero;
+                while(aux != null){
+                    if(nuevo.dato < aux.dato){
+                        nuevo.sig = aux;
+                        nuevo.ant = aux.ant;
+                        aux.ant.sig = nuevo;
+                        aux.ant = nuevo;
+                        break;
+                    }else{
+                        if(aux.sig == null){
+                            aux.sig = nuevo;
+                            nuevo.ant = aux;
+                            break;
+                        }else{
+                            aux = aux.sig;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    buscar_cabecera(dato){
+        let aux = this.primero;
+        while(aux != null){
+            if(aux.dato == dato){
+                return aux;
+            }else{
+                aux = aux.sig;
+            }
+        }
+        return null;
+    }
+
+    recorrer(){
+        let aux = this.primero;
+        while(aux != null){
+            console.log("dato =",aux.dato);
+            aux = aux.sig;
+        }
+    }
+}
+
+class matriz{
+    constructor(){
+        this.cabecetas_x = new lista_cabecera();
+        this.cabecetas_y = new lista_cabecera();
+    }
+
+    insertar(valor,x,y){
+        let nodo_cabecera_X = this.cabecetas_x.buscar_cabecera(x);
+        let nodo_cabecera_y = this.cabecetas_y.buscar_cabecera(y);
+
+        if(nodo_cabecera_X == null){
+            nodo_cabecera_X =  new nodo_cabecera(x);
+            this.cabecetas_x.insertar_cabecera(nodo_cabecera_X);
+        }
+
+        if(nodo_cabecera_y == null){
+            nodo_cabecera_y =  new nodo_cabecera(y);
+            this.cabecetas_y.insertar_cabecera(nodo_cabecera_y);
+        }
+
+        //insertar en cabecera X
+        nodo_cabecera_X.lista_interna.insertar_x(valor,x,y);
+        //insertar en cabecera Y
+        nodo_cabecera_y.lista_interna.insertar_y(valor,x,y);
+    }
+
+    recorrer_matriz(){
+        console.log("cabeceras en X");
+        let aux = this.cabecetas_x.primero;
+        while(aux != null){
+            console.log("   pos->"+aux.dato);
+            let aux2 = aux.lista_interna.primero;
+            while(aux2!= null){
+                console.log("       -"+aux2.valor);
+                aux2 = aux2.sig;
+            }
+            aux = aux.sig;
+        }
+
+        console.log("cabeceras en Y");
+        aux = this.cabecetas_y.primero;
+        while(aux != null){
+            console.log("   pos->"+aux.dato);
+            let aux2 = aux.lista_interna.primero;
+            while(aux2!= null){
+                console.log("       -"+aux2.valor);
+                aux2 = aux2.abajo;
+            }
+            aux = aux.sig;
+        }
+    }
+
+
+    graficar_matriz(){
+        let cadena="";
+        cadena+= 'digraph Matriz{ \n';
+        cadena+= 'node [shape=box];\n';
+        //Nodo matriz
+        cadena+='Mt[ label = "Matriz", width = 1.5, group = 1 ];\n'
+        //Y
+        let aux_y = this.cabecetas_y.primero;
+        while(aux_y!=null){
+            cadena+='U'+aux_y.dato.replace(':',"")+' [label = "'+aux_y.dato+'"    width = 1.5  group = 1 ];\n'
+            aux_y = aux_y.sig;
+        }
+        aux_y = this.cabecetas_y.primero;
+        while(aux_y.sig != null){
+            cadena+='U'+aux_y.dato.replace(':',"")+'->'+'U'+aux_y.sig.dato.replace(':',"")+';\n'
+            cadena+='U'+aux_y.sig.dato.replace(':',"")+'->'+'U'+aux_y.dato.replace(':',"")+';\n'
+            aux_y = aux_y.sig;
+        }
+
+        if(this.cabecetas_x.primero!= null){
+            cadena+='Mt->U'+this.cabecetas_y.primero.dato.replace(":","")+';\n';
+        }
+
+        //X
+        let aux_x = this.cabecetas_x.primero;
+        while(aux_x!=null){ 
+            cadena+='A'+aux_x.dato+' [label = '+aux_x.dato+'   width = 1.5  group = '+aux_x.dato+' ];\n'
+            aux_x = aux_x.sig;
+        }
+        aux_x = this.cabecetas_x.primero;
+        while(aux_x.sig != null){
+            cadena+='A'+aux_x.dato+'->'+'A'+aux_x.sig.dato+';\n'
+            cadena+='A'+aux_x.sig.dato+'->'+'A'+aux_x.dato+';\n'
+            aux_x = aux_x.sig;
+        }
+
+        if(this.cabecetas_x.primero!= null){
+            cadena+='Mt->A'+this.cabecetas_x.primero.dato+';\n';
+        }
+
+        cadena+='{ rank = same; Mt;'
+        aux_x = this.cabecetas_x.primero;
+        while(aux_x != null){
+            cadena+='A'+aux_x.dato+'; '
+            aux_x = aux_x.sig;
+        }
+        cadena+='}\n'
+        
+        aux_x = this.cabecetas_x.primero;
+        while(aux_x!=null){ 
+            let aux = aux_x.lista_interna.primero;
+            while(aux!=null){
+                cadena+='A'+aux.x+'_U'+aux.y.replace(':',"")+' [label = "'+aux.valor+'" width = 1.5, group = '+aux.x+' ];\n'
+                aux = aux.sig;
+            }
+
+            
+            aux = aux_x.lista_interna.primero;
+            while(aux.sig!= null){
+                cadena+='A'+aux.x+'_U'+aux.y.replace(':',"")+'->A'+aux.sig.x+'_U'+aux.sig.y.replace(':',"")+';\n';
+                cadena+='A'+aux.sig.x+'_U'+aux.sig.y.replace(':',"")+'->A'+aux.x+'_U'+aux.y.replace(':',"")+';\n';
+                aux= aux.sig;
+            }
+            if(aux_x.lista_interna.primero!= null){
+                cadena+='A'+aux_x.dato+'->'+'A'+aux_x.lista_interna.primero.x+'_U'+aux_x.lista_interna.primero.y.replace(':',"")+';\n';
+            }
+
+            aux_x = aux_x.sig;
+        }
+
+        aux_y = this.cabecetas_y.primero;
+        while(aux_y!=null){ 
+            let aux = aux_y.lista_interna.primero;
+            let nodos = ''
+            let nfila = ''
+            while(aux.abajo!= null){
+                cadena+='A'+aux.x+'_U'+aux.y.replace(':',"")+'->A'+aux.abajo.x+'_U'+aux.abajo.y.replace(':',"")+';\n';
+                cadena+='A'+aux.abajo.x+'_U'+aux.abajo.y.replace(':',"")+'->A'+aux.x+'_U'+aux.y.replace(':',"")+';\n';
+                nodos+='A'+aux.x+'_U'+aux.y.replace(':','')+';'
+                aux= aux.abajo;
+            }
+            if(aux_y.lista_interna.primero!= null){
+                nfila = 'U'+aux_y.dato.replace(':',"")+';'
+                nodos+='A'+aux.x+'_U'+aux.y.replace(':','')+'; '
+                cadena+='U'+aux_y.dato.replace(':',"")+'->'+'A'+aux_y.lista_interna.primero.x+'_U'+aux_y.lista_interna.primero.y.replace(':',"")+';\n';
+            }
+            aux_y = aux_y.sig;
+
+            cadena+='{ rank = same; '+nfila+' '+nodos+'}\n'
+
+        }
+
+        cadena+="}"
+        //console.log(cadena);
+        return cadena
+    }
+}
+
+/*
 let arbol = new arbol_avl();
 
 arbol.insertar(30, 'Javier', 20, 'javier@gmail.com', '1234');
@@ -543,3 +1041,16 @@ arbol.insertarMes(10,arbol.raiz,7)
 arbol.insertarMes(10,arbol.raiz,3)
 arbol.insertarMes(10,arbol.raiz,12)
 arbol.mostrarMeses(10,arbol.raiz)
+
+arbol.insertarEvento(10, arbol.raiz, 12, "Comer1", 1,"8:23");
+arbol.insertarEvento(10, arbol.raiz, 12, "Comida1",3,"12:00");
+arbol.insertarEvento(10, arbol.raiz, 12, "Comida2",3,"11:00");
+arbol.insertarEvento(10, arbol.raiz, 12, "Comida3",4,"15:00");
+arbol.insertarEvento(10, arbol.raiz, 12, "Comida4",5,"13:00");
+arbol.insertarEvento(10, arbol.raiz, 12, "Comida5",4,"11:00");
+arbol.insertarEvento(10, arbol.raiz, 12, "Comida6",5,"15:00");
+arbol.insertarEvento(10, arbol.raiz, 12, "Comida7",3,"13:00");
+arbol.insertarEvento(10, arbol.raiz, 12, "Comida8",10,"13:00");
+arbol.mostrarEvento(10,arbol.raiz,12)
+arbol.graficarMes(10,arbol.raiz,12)
+console.log(arbol.dotM)*/ 

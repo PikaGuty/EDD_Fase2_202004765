@@ -253,9 +253,10 @@
     </div>
 
     <script type="text/javascript" src="./ABB_Proveedor.js"></script>
+    <script type="text/javascript" src="./AVL_Vendedor.js"></script>
+    <script src="circular-json.js"></script>
 
-    <script>
-                
+    <script>       
         function IngresarP(){
             //********* Recuperando Objeto **************
             let arboll=JSON.parse(sessionStorage.arbolP)
@@ -271,6 +272,7 @@
 
             arbol.insertar(id, nombre, direccion, telefono, correo);
             arbol.PreOrder(arbol.raiz)
+            
 
             sessionStorage.setItem("arbolP", JSON.stringify(arbol))
 
@@ -280,9 +282,62 @@
             document.querySelector('#telefonoP').value=""
             document.querySelector('#correoP').value=""
         }
+    </script>
+
+<script>       
+    function IngresarV(){
+        //********* Recuperando Objeto **************
+        let aAVL=JSON.parse(sessionStorage.avl)
+        let avvl = new arbol_avl();
+        Object.assign(avvl,aAVL)
+        //*******************************************
+
+        var id = document.querySelector('#idV').value
+        var nombre = document.querySelector('#nombreV').value
+        var edad = document.querySelector('#edadV').value
+        var correo = document.querySelector('#correoV').value
+        var password = document.querySelector('#passwordV').value
+
+        avvl.insertar(parseInt(id),nombre,edad,correo,password);
+        avvl.PreOrder(avvl.raiz)
+
+        sessionStorage.setItem("avl", CircularJSON.stringify(avvl))
+
+        document.querySelector('#idV').value=""
+        document.querySelector('#nombreV').value=""
+        document.querySelector('#edadV').value=""
+        document.querySelector('#correoV').value=""
+        document.querySelector('#passwordV').value=""
+    }
+</script>
+
+<script>       
+    function IngresarC(){
+        //********* Recuperando Objeto **************
+        let aAVL=JSON.parse(sessionStorage.avl)
+        let avvl = new arbol_avl();
+        Object.assign(avvl,aAVL)
+        //*******************************************
+        avvl.inicializarClientes(avvl.raiz)
+
+        var idV = document.querySelector('#idVe').value
+        var idC = document.querySelector('#idC').value
+        var nombre = document.querySelector('#nombreC').value
+        var correo = document.querySelector('#correoC').value
+
         
 
-    </script>
+        avvl.insertarCliente(parseInt(idV),avvl.raiz,idC,nombre,correo)
+        avvl.mostrarClientes(idV,avvl.raiz) 
+
+        sessionStorage.setItem("avl", CircularJSON.stringify(avvl))
+
+        document.querySelector('#idVe').value=""
+        document.querySelector('#idC').value=""
+        document.querySelector('#nombreC').value=""
+        document.querySelector('#correoC').value=""
+    }
+</script>
 
     <script> //Formulario dinamico para ingreso manual
         async function loadFile(file) {
@@ -293,23 +348,40 @@
             div.innerHTML = 'Contenido'
             if(document.getElementById('VendedorM').checked) {
                 try{
+                    //********* Recuperando Objeto **************
+                    let aAVL=JSON.parse(sessionStorage.avl)
+                    let avvl = new arbol_avl();
+                    Object.assign(avvl,aAVL)
+                    //*******************************************
+
                     let json = JSON.parse(text)
-                console.log(json)
-                console.log(json.vendedores)
-                json.vendedores.forEach(element => console.log(element.id));
+                    json.vendedores.forEach(element => avvl.insertar(parseInt(element.id),element.nombre,element.edad,element.correo,element.password));
+                    avvl.PreOrder(avvl.raiz)
+
+                    sessionStorage.setItem("avl", CircularJSON.stringify(avvl))
                 }catch(error){
                     alert("Verifique el archivo")
                 }
             }else if (document.getElementById('ClienteM').checked){
                 try{
+                    //********* Recuperando Objeto **************
+                    let aAVL=JSON.parse(sessionStorage.avl)
+                    let avvl = new arbol_avl();
+                    Object.assign(avvl,aAVL)
+                    //*******************************************
+                    avvl.inicializarClientes(avvl.raiz)
+
                     let json = JSON.parse(text)
                     console.log(json)
                     console.log(json.vendedores)
                     
                     for (let i=0; i<json.vendedores.length;i++){
                         console.log(json.vendedores[i].id)
-                        json.vendedores[i].clientes.forEach(element => console.log(element.nombre));
+                        json.vendedores[i].clientes.forEach(element => avvl.insertarCliente(parseInt(json.vendedores[i].id),avvl.raiz,parseInt(element.id),element.nombre,element.correo));
+                        avvl.mostrarClientes(parseInt(json.vendedores[i].id),avvl.raiz) 
                     }
+                    
+                    sessionStorage.setItem("avl", CircularJSON.stringify(avvl))
                 }catch(error){
                     alert("Verifique el archivo")
                 }
@@ -370,7 +442,7 @@
 
                 elementos += '<div class="mb-4">'
                 elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">Correo</label></b>'
-                elementos += '<input type="number" class="form-control" id="correoV" style="font-family:Nunito; font-weight: bold; text-align: left;">'
+                elementos += '<input type="email" class="form-control" id="correoV" style="font-family:Nunito; font-weight: bold; text-align: left;">'
                 elementos += '</div>'
 
                 elementos += '<div class="mb-4">'
@@ -401,7 +473,7 @@
 
                 elementos += '<div class="mb-4">'
                 elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">Correo</label></b>'
-                elementos += '<input type="number" class="form-control" id="correoC" style="font-family:Nunito; font-weight: bold; text-align: left;">'
+                elementos += '<input type="text" class="form-control" id="correoC" style="font-family:Nunito; font-weight: bold; text-align: left;">'
                 elementos += '</div>'
 
                 elementos += '<button class="btn btn-success mt-2" onclick="IngresarC()" style="font-family:Nunito; font-weight: bold;">Ingresar Cliente</button>'

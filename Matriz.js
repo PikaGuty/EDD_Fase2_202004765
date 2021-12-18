@@ -324,7 +324,7 @@ class matriz{
 }
 
 
-let matriz1 = new matriz();
+/*let matriz1 = new matriz();
 
 matriz1.insertar("Comida",3,"12:00");
 matriz1.insertar("Comida",3,"11:00");
@@ -337,6 +337,6 @@ matriz1.insertar("Comida",10,"13:00");
 
 
 matriz1.recorrer_matriz();
-matriz1.graficar_matriz();
+matriz1.graficar_matriz();*/
 
 

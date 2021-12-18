@@ -76,7 +76,7 @@ class abb{
         
     }
 
-    Tabla(raizA){
+    Tabla(raizA){ 
         if (raizA!=null){
             this.Tabla(raizA.izq);
             this.tab += '<tr>'
@@ -89,6 +89,7 @@ class abb{
             this.tab += '<td>'
             this.tab += '<button value=\"'+raizA.id+'\" onclick="eliminar(this.value);VerA(\'Proveedor\');" style="background-color:#C82807 " type="button" class="btn btn-outline-dark"><i class="fas fa-trash"></i></button> </td>'
             this.tab += '</tr>'
+            
             
             
             this.Tabla(raizA.der);
