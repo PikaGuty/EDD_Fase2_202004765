@@ -131,25 +131,39 @@
                 </nav>
                 <!--ACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-->
                 <div class="container-fluid">
-
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Inicio</h1>
-                        
+                        <h1 class="h3 mb-0 text-gray-800">Carga Individual</h1>
                     </div>
-
-                        <div class="row justify-content-center">
-                            <div class="col-lg-6 mb-4">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Bienvenido Vendedor</h6>
-                                </div>
-                                <div class="card-body">
-                                    <img src="img/vemdedor.jpg" alt="" width="480" height="400">
+                    <br>
+                    <div class="container mt-5">
+                        <div class="row">
+                            <div class="card " style="width: 35rem; margin:0 auto; float: none; margin-bottom: 10px; background: #4e73df;">
+                                <div class="card-body text-center" style="border-radius: 20px;">
+                                    <div>
+                                        <h1 style="color:#FFFF; font-family:Nunito; font-weight: bold;" >Registrar Usuario</h1>
+                                        <hr>
+                                    </div>
+                                        <div>
+                                            <input type="radio" id="Cliente" name="opcion" value="Cliente" onchange="Prueba('Cliente')">
+                                            <label style="color:#FFFF; font-family:Nunito; font-weight: bold;" for="Cliente">Cliente</label>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;
+                                            <input type="radio" id="Evento" name="opcion" value="Evento" onchange="Prueba('Evento')">
+                                            <label style="color:#FFFF; font-family:Nunito; font-weight: bold;" for="Evento">Evento</label>
+                                          </div>
+                                          <hr>
+                                        <div class="mb-6" id="FReg"> 
+                                        </div>
+                                        <br>
                                 </div>
                             </div>
-                            
                         </div>
                     </div>
+
+                    <br><br><br><hr><br><br><br>
+
+                    <h1 class="h3 mb-0 text-gray-800" id='ou'></h1><br>
+                    <pre id="output"></pre>
+
                 </div>
 
             </div>
@@ -163,7 +177,7 @@
           
                             <a class="btn btn-outline-dark  m-1" href="https://github.com/PikaGuty" role="button"><i class="fab fa-github"></i>  GitHub</a>
                           </section>
-                        <span>Copyright © 2021.  :'v</span>
+                        <span>Copyright © 2021. :'v</span>
                     </div>
                 </div>
             </footer>
@@ -195,6 +209,121 @@
         </div>
     </div>
 
+    <script type="text/javascript" src="./ABB_Proveedor.js"></script>
+    <script type="text/javascript" src="./AVL_Vendedor.js"></script>
+    <script src="circular-json.js"></script>
+
+
+
+<script>       
+    function IngresarC(){
+        //********* Recuperando Objeto **************
+        let aAVL=JSON.parse(sessionStorage.avl)
+        let avvl = new arbol_avl();
+        Object.assign(avvl,aAVL)
+        //*******************************************
+        avvl.inicializarClientes(avvl.raiz)
+
+        var idV = sessionStorage.ID
+        var idC = document.querySelector('#idC').value
+        var nombre = document.querySelector('#nombreC').value
+        var correo = document.querySelector('#correoC').value
+
+        
+
+        avvl.insertarCliente(parseInt(idV),avvl.raiz,parseInt(idC),nombre,correo)
+        avvl.mostrarClientes(idV,avvl.raiz) 
+
+        sessionStorage.setItem("avl", CircularJSON.stringify(avvl))
+
+        
+        document.querySelector('#idC').value=""
+        document.querySelector('#nombreC').value=""
+        document.querySelector('#correoC').value=""
+    }
+</script>
+
+<script>       
+    function IngresarE(){
+        //********* Recuperando Objeto **************
+        let aAVL=JSON.parse(sessionStorage.avl)
+        let avvl = new arbol_avl();
+        Object.assign(avvl,aAVL)
+        //*******************************************
+        avvl.inicializarMes(avvl.raiz)
+        avvl.inicializarCalendario(avvl.raiz)
+
+        var idV = sessionStorage.ID
+        var fecha = document.querySelector('#fechaE').value
+        var hora = document.querySelector('#horaE').value+''
+        var desc = document.querySelector('#descE').value
+
+        var fech = fecha.split('-');
+        
+        avvl.insertarMes(idV,avvl.raiz,parseInt(fech[1]))
+        avvl.insertarEvento(idV, avvl.raiz, parseInt(fech[1]), desc,parseInt(fech[2]),hora);
+        avvl.mostrarEvento(idV,avvl.raiz,parseInt(fech[1]))
+
+        sessionStorage.setItem("avl", CircularJSON.stringify(avvl))
+
+        document.querySelector('#fechaE').value="2022-01-01"
+        document.querySelector('#horaE').value="00:00"
+        document.querySelector('#descE').value=""
+    }
+</script>
+
+    <script> //Formulario dinamico para ingreso manual
+        
+        function Prueba(opcion){
+            var elementos=''
+            if (opcion=="Cliente"){
+                var div=document.querySelector('#FReg')
+
+                elementos += '<div class="mb-4">'
+                elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">ID Cliente</label></b>'
+                elementos += '<input type="number" class="form-control" id="idC" style="font-family:Nunito; font-weight: bold; text-align: left;">'
+                elementos += '</div>'
+
+                elementos += '<div class="mb-4">'
+                elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">Nombre</label></b>'
+                elementos += '<input type="text" class="form-control" id="nombreC" style="font-family:Nunito; font-weight: bold; text-align: left;">'
+                elementos += '</div>'
+
+                elementos += '<div class="mb-4">'
+                elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">Correo</label></b>'
+                elementos += '<input type="text" class="form-control" id="correoC" style="font-family:Nunito; font-weight: bold; text-align: left;">'
+                elementos += '</div>'
+
+                elementos += '<button class="btn btn-success mt-2" onclick="IngresarC()" style="font-family:Nunito; font-weight: bold;">Ingresar Cliente</button>'
+
+
+                div.innerHTML = elementos
+            }else if (opcion=="Evento"){
+                var div=document.querySelector('#FReg')
+
+                elementos += '<div class="mb-4">'
+                elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">Fecha de evento</label></b>'
+                elementos += '<br><input type="date" class="form-control" id="fechaE" value="2022-01-01" min="2022-01-01" max="2022-12-31" style="font-family:Nunito; font-weight: bold; text-align: left;">'
+                elementos += '</div>'
+
+                elementos += '<div class="mb-4">'
+                elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">Hora</label></b>'
+                elementos += '<input type="time" class="form-control" id="horaE" style="font-family:Nunito; font-weight: bold; text-align: left;">'
+                elementos += '</div>'
+
+                elementos += '<div class="mb-4">'
+                elementos += '<b><label class="form-label" style=" font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">Descripcion</label></b>'
+                elementos += '<input type="text" class="form-control" id="descE" style="font-family:Nunito; font-weight: bold; text-align: left;">'
+                elementos += '</div>'
+
+                elementos += '<button class="btn btn-success mt-2" onclick="IngresarE()" style="font-family:Nunito; font-weight: bold;">Ingresar Evento</button>'
+
+
+                div.innerHTML = elementos
+            }
+        }
+    </script>
+
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
@@ -205,7 +334,7 @@
     <script src="vendor/chart.js/Chart.min.js"></script>
 
     <script src="js/demo/chart-area-demo.js"></script>
-    <script src="js/demo/chart-pie-demo.js"></script>-
+    <script src="js/demo/chart-pie-demo.js"></script>
 
 </body>
 

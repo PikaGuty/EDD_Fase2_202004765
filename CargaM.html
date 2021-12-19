@@ -270,17 +270,22 @@
             var telefono = document.querySelector('#telefonoP').value
             var correo = document.querySelector('#correoP').value
 
-            arbol.insertar(id, nombre, direccion, telefono, correo);
-            arbol.PreOrder(arbol.raiz)
+            if (id!='' && nombre !='' && direccion!='' && telefono!='' && correo!=''){
+                arbol.insertar(parseInt(id), nombre, direccion, telefono, correo);
+                arbol.PreOrder(arbol.raiz)
+                
+                sessionStorage.setItem("arbolP", JSON.stringify(arbol))
+
+                document.querySelector('#idP').value=""
+                document.querySelector('#nombreP').value=""
+                document.querySelector('#direccionP').value=""
+                document.querySelector('#telefonoP').value=""
+                document.querySelector('#correoP').value=""
+            }else{
+                alert('Debe rellenar todos los campos')
+            }
+
             
-
-            sessionStorage.setItem("arbolP", JSON.stringify(arbol))
-
-            document.querySelector('#idP').value=""
-            document.querySelector('#nombreP').value=""
-            document.querySelector('#direccionP').value=""
-            document.querySelector('#telefonoP').value=""
-            document.querySelector('#correoP').value=""
         }
     </script>
 
@@ -327,7 +332,7 @@
 
         
 
-        avvl.insertarCliente(parseInt(idV),avvl.raiz,idC,nombre,correo)
+        avvl.insertarCliente(parseInt(idV),avvl.raiz,parseInt(idC),nombre,correo)
         avvl.mostrarClientes(idV,avvl.raiz) 
 
         sessionStorage.setItem("avl", CircularJSON.stringify(avvl))
@@ -336,6 +341,36 @@
         document.querySelector('#idC').value=""
         document.querySelector('#nombreC').value=""
         document.querySelector('#correoC').value=""
+    }
+</script>
+
+<script>       
+    function IngresarE(){
+        //********* Recuperando Objeto **************
+        let aAVL=JSON.parse(sessionStorage.avl)
+        let avvl = new arbol_avl();
+        Object.assign(avvl,aAVL)
+        //*******************************************
+        avvl.inicializarMes(avvl.raiz)
+        avvl.inicializarCalendario(avvl.raiz)
+
+        var idV = document.querySelector('#idVen').value
+        var fecha = document.querySelector('#fechaE').value
+        var hora = document.querySelector('#horaE').value+''
+        var desc = document.querySelector('#descE').value
+
+        var fech = fecha.split('-');
+        
+        avvl.insertarMes(idV,avvl.raiz,parseInt(fech[1]))
+        avvl.insertarEvento(idV, avvl.raiz, parseInt(fech[1]), desc,parseInt(fech[2]),hora);
+        avvl.mostrarEvento(idV,avvl.raiz,parseInt(fech[1]))
+
+        sessionStorage.setItem("avl", CircularJSON.stringify(avvl))
+
+        document.querySelector('#idVen').value=""
+        document.querySelector('#fechaE').value="2022-01-01"
+        document.querySelector('#horaE').value="00:00"
+        document.querySelector('#descE').value=""
     }
 </script>
 
@@ -394,7 +429,7 @@
                     //*******************************************
 
                     let json = JSON.parse(text)
-                    json.proveedores.forEach(element => arbol.insertar(element.id, element.nombre, element.direccion, element.telefono, element.correo));
+                    json.proveedores.forEach(element => arbol.insertar(parseInt(element.id), element.nombre, element.direccion, element.telefono, element.correo));
                     arbol.PreOrder(arbol.raiz)
 
                     sessionStorage.setItem("arbolP", JSON.stringify(arbol))
@@ -404,15 +439,39 @@
                 
             }else if (document.getElementById('EventoM').checked){
                 try{
-                    let json = JSON.parse(text)
-                    console.log(json)
-                    console.log(json.vendedores)
+                    //********* Recuperando Objeto **************
+                    let aAVL=JSON.parse(sessionStorage.avl)
+                    let avvl = new arbol_avl();
+                    Object.assign(avvl,aAVL)
+                    //*******************************************
+                    avvl.inicializarMes(avvl.raiz)
+                    avvl.inicializarCalendario(avvl.raiz)
                     
+                    let json = JSON.parse(text)
                     for (let i=0; i<json.vendedores.length;i++){
-                        console.log(json.vendedores[i].id)
-                        json.vendedores[i].eventos.forEach(element => console.log(element.desc));
+                        //console.log(json.vendedores[i].id)
+                        json.vendedores[i].eventos.forEach(element => {
+                            
+                            var h = ''
+                            if ((element.hora+'').includes(':')){
+                                h = element.hora
+                            }else{
+                                h=element.hora+':00'
+                            }//console.log(h)
+                            avvl.insertarMes(parseInt(json.vendedores[i].id),avvl.raiz,parseInt(element.mes));
+                            avvl.insertarEvento(parseInt(json.vendedores[i].id), avvl.raiz, parseInt(element.mes), element.desc,parseInt(element.dia),h);
+                            avvl.mostrarEvento(parseInt(json.vendedores[i]).id,avvl.raiz,parseInt(element.mes))
+                        });
+                        
                     }
+                    //avvl.insertarMes(1,avvl.raiz,12)
+                    //avvl.insertarEvento(1, avvl.raiz, 12, "Comida8",10,"13:00");
+                    //avvl.mostrarEvento(1,avvl.raiz,12)
+                    
+                    sessionStorage.setItem("avl", CircularJSON.stringify(avvl))
+                    
                 }catch(error){
+                    alert(error)
                     alert("Verifique el archivo")
                 }
                 
@@ -521,18 +580,13 @@
                 elementos += '</div>'
 
                 elementos += '<div class="mb-4">'
-                elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">Mes</label></b>'
-                elementos += '<input type="number" class="form-control" id="mesE" style="font-family:Nunito; font-weight: bold; text-align: left;">'
-                elementos += '</div>'
-
-                elementos += '<div class="mb-4">'
-                elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">Dia</label></b>'
-                elementos += '<input type="number" class="form-control" id="diaE" style="font-family:Nunito; font-weight: bold; text-align: left;">'
+                elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">Fecha de evento</label></b>'
+                elementos += '<br><input type="date" class="form-control" id="fechaE" value="2022-01-01" min="2022-01-01" max="2022-12-31" style="font-family:Nunito; font-weight: bold; text-align: left;">'
                 elementos += '</div>'
 
                 elementos += '<div class="mb-4">'
                 elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">Hora</label></b>'
-                elementos += '<input type="number" class="form-control" id="horaE" style="font-family:Nunito; font-weight: bold; text-align: left;">'
+                elementos += '<input type="time" class="form-control" id="horaE" style="font-family:Nunito; font-weight: bold; text-align: left;">'
                 elementos += '</div>'
 
                 elementos += '<div class="mb-4">'

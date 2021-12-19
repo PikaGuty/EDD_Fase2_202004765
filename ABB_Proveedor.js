@@ -17,6 +17,7 @@ class abb{
         this.dot = '';
         this.busc=''
         this.tab=''
+        this.nodoB=''
         //Object.assign(this.insertar,this.insertar_nodo,this.PreOrder,this.generar,this.buscar)
         console.log("Inicializao")
     }
@@ -182,7 +183,7 @@ class abb{
                             let list = new lista();
                             Object.assign(list,lis)
                             list.mostrar()
-                            return 'borrado'
+                            this.nodoB = 'borrado'
                         }
                         
                     }else if (lado == 'd'){
@@ -199,12 +200,13 @@ class abb{
                         }else if (raizAc.izq!=null && raizAc.der!=null){
                             let listaaaa = new lista();
                             this.listaa=JSON.stringify(listaaaa)
-                            this.PreOrderL(raiz,id)
+                            this.PreOrderL(raiz,id)                            
                             let lis=JSON.parse(this.listaa)
                             let list = new lista();
                             Object.assign(list,lis)
                             list.mostrar()
-                            return 'borrado'
+                            //console.log("INTENTO")
+                            this.nodoB = 'borrado'
                         }
                         
                     }

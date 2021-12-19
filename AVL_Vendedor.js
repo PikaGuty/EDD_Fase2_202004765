@@ -19,9 +19,23 @@ class arbol_avl{
         this.listaa = null;
         this.dotM = ''
         this.busc=null
+        this.tablaC=''
+        this.nodoB = ''
     }
     insertar(id, nombre, edad, correo, pass){
         let nuevo = new nodo_avl(id, nombre, edad, correo, pass);
+        
+        if(this.raiz==null){
+            this.raiz=nuevo;
+        }else{
+            this.raiz=this.insertarNodo(this.raiz,nuevo)
+        }
+    }
+
+    insertarr(id, nombre, edad, correo, pass, clientes, calendario){
+        let nuevo = new nodo_avl(id, nombre, edad, correo, pass);
+        nuevo.calendario = calendario
+        nuevo.clientes = clientes
         
         if(this.raiz==null){
             this.raiz=nuevo;
@@ -165,7 +179,7 @@ class arbol_avl{
                 let list = new listaAux();
                 Object.assign(list,lis)
                 list.mostrar()
-                return 'borrado'
+                this.nodoB = 'borrado'
                 
             }else{
                 raizAn=raizAc
@@ -182,7 +196,7 @@ class arbol_avl{
         Object.assign(list,lis)
         if (raizA!=null){
             if (raizA.id != id){
-                list.insertar(raizA.id,raizA.nombre,raizA.edad,raizA.correo,raizA.pass,raizA.clientes,raizA.calendario);
+                list.insertar(raizA.id,raizA.nombre,raizA.edad,raizA.correo,raizA.pass,raizA.clientes,raizA.calendario)
             }
             const CircularJSON = function(JSON,RegExp){var specialChar="~",safeSpecialChar="\\x"+("0"+specialChar.charCodeAt(0).toString(16)).slice(-2),escapedSafeSpecialChar="\\"+safeSpecialChar,specialCharRG=new RegExp(safeSpecialChar,"g"),safeSpecialCharRG=new RegExp(escapedSafeSpecialChar,"g"),safeStartWithSpecialCharRG=new RegExp("(?:^|([^\\\\]))"+escapedSafeSpecialChar),indexOf=[].indexOf||function(v){for(var i=this.length;i--&&this[i]!==v;);return i},$String=String;function generateReplacer(value,replacer,resolve){var doNotIgnore=false,inspect=!!replacer,path=[],all=[value],seen=[value],mapp=[resolve?specialChar:"[Circular]"],last=value,lvl=1,i,fn;if(inspect){fn=typeof replacer==="object"?function(key,value){return key!==""&&replacer.indexOf(key)<0?void 0:value}:replacer}return function(key,value){if(inspect)value=fn.call(this,key,value);if(doNotIgnore){if(last!==this){i=lvl-indexOf.call(all,this)-1;lvl-=i;all.splice(lvl,all.length);path.splice(lvl-1,path.length);last=this}if(typeof value==="object"&&value){if(indexOf.call(all,value)<0){all.push(last=value)}lvl=all.length;i=indexOf.call(seen,value);if(i<0){i=seen.push(value)-1;if(resolve){path.push((""+key).replace(specialCharRG,safeSpecialChar));mapp[i]=specialChar+path.join(specialChar)}else{mapp[i]=mapp[0]}}else{value=mapp[i]}}else{if(typeof value==="string"&&resolve){value=value.replace(safeSpecialChar,escapedSafeSpecialChar).replace(specialChar,safeSpecialChar)}}}else{doNotIgnore=true}return value}}function retrieveFromPath(current,keys){for(var i=0,length=keys.length;i<length;current=current[keys[i++].replace(safeSpecialCharRG,specialChar)]);return current}function generateReviver(reviver){return function(key,value){var isString=typeof value==="string";if(isString&&value.charAt(0)===specialChar){return new $String(value.slice(1))}if(key==="")value=regenerate(value,value,{});if(isString)value=value.replace(safeStartWithSpecialCharRG,"$1"+specialChar).replace(escapedSafeSpecialChar,safeSpecialChar);return reviver?reviver.call(this,key,value):value}}function regenerateArray(root,current,retrieve){for(var i=0,length=current.length;i<length;i++){current[i]=regenerate(root,current[i],retrieve)}return current}function regenerateObject(root,current,retrieve){for(var key in current){if(current.hasOwnProperty(key)){current[key]=regenerate(root,current[key],retrieve)}}return current}function regenerate(root,current,retrieve){return current instanceof Array?regenerateArray(root,current,retrieve):current instanceof $String?current.length?retrieve.hasOwnProperty(current)?retrieve[current]:retrieve[current]=retrieveFromPath(root,current.split(specialChar)):root:current instanceof Object?regenerateObject(root,current,retrieve):current}var CircularJSON={stringify:function stringify(value,replacer,space,doNotResolve){return CircularJSON.parser.stringify(value,generateReplacer(value,replacer,!doNotResolve),space)},parse:function parse(text,reviver){return CircularJSON.parser.parse(text,generateReviver(reviver))},parser:JSON};return CircularJSON}(JSON,RegExp);
             this.listaa=CircularJSON.stringify(list)
@@ -243,6 +257,7 @@ class arbol_avl{
         if(raizA != null){
             if (id==raizA.id){
                 raizA.calendario.insertar(mes)
+                console.log('Insertao')
             }else{
                 this.insertarMes(id,raizA.izq,mes);
                 this.insertarMes(id,raizA.der,mes);
@@ -254,6 +269,7 @@ class arbol_avl{
         if(raizA != null){
             if (id==raizA.id){
                 raizA.calendario.insertarE(mes,desc,dia,hora)
+                //alert("Mes "+mes+" insertado")
             }else{
                 this.insertarEvento(id,raizA.izq,mes,desc,dia,hora);
                 this.insertarEvento(id,raizA.der,mes,desc,dia,hora);
@@ -294,6 +310,17 @@ class arbol_avl{
         }
     }
 
+    TablaClientes(id,raizA){
+        if(raizA != null){
+            if (id==raizA.id){
+                this.tablaC=raizA.clientes.tabla(id)
+            }else{
+                this.TablaClientes(id,raizA.izq);
+                this.TablaClientes(id,raizA.der);
+            }
+        }
+    }
+
     mostrarMeses(id,raizA){
         if(raizA != null){
             if (id==raizA.id){
@@ -327,9 +354,12 @@ class arbol_avl{
 
     recorrerC(id,raizA){
         let dot = ''
-        if(raizA != null){
+        if(raizA!= null){
             if (id==raizA.id){
-                dot+=raizA.clientes.generar()
+                if (raizA.clientes!=null){
+                    dot+=raizA.clientes.generar()
+                }
+                
             }else{
                 dot += this.recorrerC(id,raizA.izq);
                 dot += this.recorrerC(id,raizA.der);
@@ -380,6 +410,7 @@ class nodoL{
 class listaD{
     constructor(){
         this.primero = null;
+        this.ultimo = null;
         //this.dot=''
     }
 
@@ -390,24 +421,34 @@ class listaD{
             this.primero = nuevo;
         }else{
             let aux = this.primero;
-            let b=true
-            while(aux != null){
+            let exists=false
+            while(aux.siguiente != null) {
                 if (idC==aux.idC){
-                    b = false
-                    console.log("false")
+                    exists = true
                 }
-                aux = aux.siguiente;
-            };
-            aux = this.primero;
-            while(aux.siguiente != null){
-                aux = aux.siguiente;
-            };
-            if (b){
+                aux = aux.siguiente
+            }
+            if (idC==aux.idC){
+                exists = true
+            }
+
+            if (!exists){
                 aux.siguiente = nuevo;
                 nuevo.anterior = aux;
+                console.log("Ingresado")
+
+                console.log(aux.siguiente)
+                console.log(nuevo.anterior)
             }else{
                 console.log("El cliente con ID "+idC+" ya existe en la cartera de clientes de: "+idV)
                 alert("El cliente con ID "+idC+" ya existe en la cartera de clientes de: "+idV)
+            }
+            aux = this.primero;
+            console.log("Recorriendo")
+            while(aux != null) {
+                console.log(aux.siguiente)
+                console.log(aux.anterior)
+                aux = aux.siguiente
             }
         }
     }
@@ -429,29 +470,46 @@ class listaD{
         }
         console.log(list)
     }
+
+    tabla(id){
+        let aux = this.primero;
+        //console.log("********** Mostar Lista de "+id+" **********")
+        let list=""
+        while(aux != null){
+            
+            list += '<tr>'
+            list += '<td>'+aux.idC+'</td>'
+            list += '<td>'+aux.nombre+'</td>'
+            list += '<td>'+aux.correo+'</td>'
+            
+            list += '<td>'
+            list += '<button value=\"'+aux.idC+'\" onclick="eliminarC(this.value);VerA(\'Cliente\');" style="background-color:#C82807 " type="button" class="btn btn-outline-dark"><i class="fas fa-trash"></i></button> </td>'
+            list += '</tr>'
+            
+            aux = aux.siguiente;
+        }
+        return list
+    }
     
     eliminar(valor){
         let aux = this.primero;
-        let auxAnt, auxSig
-
+        
         while(aux != null){
             if (valor==aux.idC){
-                auxAnt=aux.anterior
-                auxSig=aux.siguiente
+                if (this.primero.idC==aux.idC){ //Eliminar primero
+                    console.log("Primero")
+                    aux.siguiente.anterior=null
+                    this.primero=aux.siguiente
+                }else if (aux.siguiente==null){ //Eliminar ultimo
+                    console.log("Ultimo")
+                    aux.anterior.siguiente=null
+                }else{  //Eliminar enmedio
+                    aux.anterior.siguiente=aux.siguiente
+                    aux.siguiente.anterior=aux.anterior
+                }
+                break
             }
             aux = aux.siguiente;
-        }
-        if (auxAnt==null){ //Eliminar primero
-            console.log("Primero")
-            auxSig.anterior=null
-            this.primero=auxSig
-        }else if (auxSig==null){ //Eliminar ultimo
-            console.log("Ultimo")
-            auxAnt.siguiente=null
-        }else{  //Eliminar enmedio
-            console.log("Enmedio")
-            auxAnt.siguiente=auxSig
-            auxSig.anterior=auxAnt
         }
     }
     generar(){
@@ -465,7 +523,7 @@ class listaD{
                 dot +=aux.idC +'->'+aux.siguiente.idC+';\n'
                 dot +=aux.siguiente.idC +'->'+aux.idC+';\n'
             }
-            
+            //alert(aux.anterior)
             aux = aux.siguiente;
         }
         return dot
@@ -494,23 +552,24 @@ class listaM{
             this.primero = nuevo;
         }else{
             let aux = this.primero;
-            let b=true
-            while(aux != null){
+            let exists=false
+            while(aux.siguiente != null) {
                 if (mes==aux.mes){
-                    b = false
+                    exists = true
                 }
-                aux = aux.siguiente;
-            };
-            aux = this.primero;
-            while(aux != null){
-                aux = aux.siguiente;
-            };
-            if (b){
+                aux = aux.siguiente
+            }
+            if (mes==aux.mes){
+                exists = true
+            }
+
+            if (!exists){
                 aux.siguiente = nuevo;
                 nuevo.anterior = aux;
             }else{
-                console.log("El mes "+mes+" ya existe")
-            }
+                console.log("El mes "+mes+" ya existe ")
+                //alert("El mes "+idC+" ya existe")
+            }  
         }
     }
 
@@ -538,12 +597,14 @@ class listaM{
             aux.calendario.cabecetas_x = new lista_cabecera();
             Object.assign(aux.calendario.cabecetas_x,auxx_x)
             //*******************************************
+            aux.calendario.cabecetas_x.inni()
 
             let auxx_y = aux.calendario.cabecetas_y 
             //********* Recuperando Objeto **************
             aux.calendario.cabecetas_y = new lista_cabecera();
             Object.assign(aux.calendario.cabecetas_y,auxx_y)
             //*******************************************
+            aux.calendario.cabecetas_y.inni()
 
             //console.log(aux.calendario.cabecetas_x)
             //console.log(aux.calendario.cabecetas_y)
@@ -671,7 +732,7 @@ class listaAux{
         let aux = this.primero;
         while(aux != null){
             console.log(aux.dato)
-            arbol.insertar(aux.dato,aux.nombre,aux.edad,aux.correo)
+            arbol.insertarr(aux.dato,aux.nombre,aux.edad,aux.correo,aux.pass,aux.clientes,aux.calendario)
             aux = aux.siguiente;
         }
         sessionStorage.setItem("avl", JSON.stringify(arbol))
@@ -797,6 +858,15 @@ class nodo_cabecera{
 class lista_cabecera{
     constructor(){
         this.primero = null;
+    }
+
+    inni(){
+        let aux = this.primero;
+        let auxx = aux.lista_interna
+        //********* Recuperando Objeto **************
+        aux.lista_interna = new lista_interna()
+        Object.assign(aux.lista_interna,auxx)
+        //*******************************************
     }
 
     insertar_cabecera(nuevo){
@@ -931,7 +1001,7 @@ class matriz{
         //X
         let aux_x = this.cabecetas_x.primero;
         while(aux_x!=null){ 
-            cadena+='A'+aux_x.dato+' [label = '+aux_x.dato+'   width = 1.5  group = '+aux_x.dato+' ];\n'
+            cadena+='A'+aux_x.dato+' [label = \"'+aux_x.dato+'\"   width = 1.5  group = '+aux_x.dato+' ];\n'
             aux_x = aux_x.sig;
         }
         aux_x = this.cabecetas_x.primero;

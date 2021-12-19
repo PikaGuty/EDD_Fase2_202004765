@@ -6,10 +6,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content=""> 
+    <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Administrador</title>
+    <title>Paciente</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -29,16 +29,16 @@
 
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="inicioA.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="inicioV.html">
                 <div class="sidebar-brand-icon rotate-n-15">
                 </div>
-                <div class="sidebar-brand-text mx-3">Administrador</sup></div>
+                <div class="sidebar-brand-text mx-3">Vendedor</sup></div>
             </a>
 
             <hr class="sidebar-divider my-0">
 
             <li class="nav-item active">
-                <a class="nav-link" href="inicioA.html">
+                <a class="nav-link" href="inicioV.html">
                     <span>Inicio</span></a>
             </li>
 
@@ -49,15 +49,14 @@
             </div>
 
             <li class="nav-item">
-                <a class="nav-link" href="CargaM.html">
-                    <span>Carga</span></a>
+                <a class="nav-link" href="IngresoV.html">
+                    <span>Registrar Clientes &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/<br> Ingresar Eventos</span></a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="VUsuarios.html">
-                    <span>Reportes</span></a>
+                <a class="nav-link" href="VerV.html">
+                    <span>Ver Clientes &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/<br> Ver Eventos</span></a>
             </li>
-
 
             <hr class="sidebar-divider">
 
@@ -130,7 +129,7 @@
                     </ul>
 
                 </nav>
-
+                <!--ACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-->
                 <div class="container-fluid">
 
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -148,14 +147,8 @@
                                             <hr>
                                         </div>
                                             <div>
-                                                <input type="radio" id="Vendedor" name="opcion" value="Vendedor" onchange="VerA('Vendedor')">
-                                                <label style="color:#FFFF; font-family:Nunito; font-weight: bold;" for="Vendedor">Vendedor</label>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;
                                                 <input type="radio" id="Cliente" name="opcion" value="Cliente" onchange="VerA('Cliente')">
                                                 <label style="color:#FFFF; font-family:Nunito; font-weight: bold;" for="Cliente">Cliente</label>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                                <input type="radio" id="Proveedor" name="opcion" value="Proveedor" onchange="VerA('Proveedor')">
-                                                <label style="color:#FFFF; font-family:Nunito; font-weight: bold;" for="Proveedor">Proveedor</label>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                                 <input type="radio" id="Evento" name="opcion" value="Evento" onchange="VerA('Evento')">
                                                 <label style="color:#FFFF; font-family:Nunito; font-weight: bold;" for="Evento">Evento</label>
@@ -230,268 +223,8 @@
 
     function VerA(opcion){
             var elementos=''
-            if (opcion=='Vendedor'){
-                var divv=document.querySelector('#FRegg')
-                divv.innerHTML = ''
-                var div2=document.querySelector('#grafico')
-                div2.innerHTML = ''
-                var div=document.querySelector('#FReg')
-
-                elementos += '<table class="table table-striped table-dark">'
-                elementos += '<caption style="color:#FFFF; font-family:Nunito; font-weight: bold;">Recorrido In Order Arbol AVL de Vendedores</caption>'
-                elementos += '<thead>'
-                elementos += '<tr>'
-                elementos += '<th scope="col">ID</th>'
-                elementos += '<th scope="col">Nombre</th>'
-                elementos += '<th scope="col">Edad</th>'
-                elementos += '<th scope="col">Correo</th>'
-                elementos += '<th scope="col">Password</th>'
-                elementos += '<th scope="col">Opciones</th>'
-                elementos += '</tr>'
-                elementos += '</thead>'
-                elementos += '<tbody>'
-
-                //********* Recuperando Objeto **************
-                let aAVL=JSON.parse(sessionStorage.avl)
-                let avvl = new arbol_avl();
-                Object.assign(avvl,aAVL)
-                //*******************************************
-            
-                avvl.tab = ''
-                avvl.Tabla(avvl.raiz)
-                elementos += avvl.tab
-
-                elementos += '</tbody>'
-                elementos += '</table>'
-
-                div.innerHTML = elementos
-
-                let gra = ''
-                var div2=document.querySelector('#grafico')
-
-                gra += '<div class="row justify-content-center">'
-                gra +='<div class="card " style="width: 60rem; height: 65rem; margin:0 auto; float: none; margin-bottom: 10px; background: #4e73df ;">'
-                gra +='<div class="card-body text-center" style="border-radius: 20px;">'
-                gra +='<h1 style="color:#FFFF; font-family:Nunito; font-weight: bold;" >Grafica</h1>'
-                gra +='<hr>'
-                gra +='<div id="mynetwork" style="background: #FFFF ; height: 57rem;"></div>'
-                gra +='</div>'
-                gra +='</div>'
-                gra +='</div>'
-
-                div2.innerHTML = gra
-                
-                var container = document.getElementById("mynetwork");
-                var DOTstring = avvl.generarDot()
-                var parsedData = vis.parseDOTNetwork(DOTstring);
-                var data = {
-                    nodes: parsedData.nodes,
-                    edges: parsedData.edges
-                }
-                var options = {
-                    nodes: {
-                        widthConstraint: 20,
-                    },        
-                    layout: {
-                        hierarchical: {
-                            levelSeparation: 100,
-                            nodeSpacing: 100,
-                            parentCentralization: true,
-                            direction: 'UD',        // UD, DU, LR, RL
-                            sortMethod: 'directed',  // hubsize, directed
-                            shakeTowards: 'roots'  // roots, leaves                        
-                        },
-                    }, 
-                                            
-                };
-                var network = new vis.Network(container, data, options);
-            }else if (opcion=="Cliente"){
-                var divv=document.querySelector('#FReg')
-                divv.innerHTML = ''
-                var div2=document.querySelector('#grafico')
-                div2.innerHTML = ''
-                var div=document.querySelector('#FRegg')
-
-                elementos += '<div class="mb-4">'
-                elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">ID Vendedor</label></b>'
-                elementos += '<input type="number" class="form-control" id="idVende" style="font-family:Nunito; font-weight: bold; text-align: left;">'
-                elementos += '<br><button onclick="client()" type="button" class="btn btn-info">Ver</button>'
-                elementos += '</div>'
-                
-
-                div.innerHTML = elementos
-            }else if (opcion=="Proveedor"){
-                var divv=document.querySelector('#FRegg')
-                divv.innerHTML = ''
-                var div2=document.querySelector('#grafico')
-                div2.innerHTML = ''
-                var div=document.querySelector('#FReg')
-
-                elementos += '<table class="table table-striped table-dark">'
-                elementos += '<caption style="color:#FFFF; font-family:Nunito; font-weight: bold;">Recorrido In Order Arbol de Busqueda Binaria de Proveedores</caption>'
-                elementos += '<thead>'
-                elementos += '<tr>'
-                elementos += '<th scope="col">ID</th>'
-                elementos += '<th scope="col">Nombre</th>'
-                elementos += '<th scope="col">Dirección</th>'
-                elementos += '<th scope="col">Teléfono</th>'
-                elementos += '<th scope="col">Correo</th>'
-                elementos += '<th scope="col">Opciones</th>'
-                elementos += '</tr>'
-                elementos += '</thead>'
-                elementos += '<tbody>'
-
-                //********* Recuperando Objeto **************
-                let arboll=JSON.parse(sessionStorage.arbolP)
-                let arbol = new abb();
-                Object.assign(arbol,arboll)
-                //*******************************************
-                
-                arbol.dot=''
-                arbol.generar(arbol.raiz)
-                console.log(arbol.dot)
-
-                arbol.tab = ''
-                arbol.Tabla(arbol.raiz)
-                elementos += arbol.tab
-
-                elementos += '</tbody>'
-                elementos += '</table>'
-                
-                div.innerHTML = elementos
-
-                let gra = ''
-                var div2=document.querySelector('#grafico')
-
-                gra += '<div class="row justify-content-center">'
-                gra +='<div class="card " style="width: 60rem; height: 65rem; margin:0 auto; float: none; margin-bottom: 10px; background: #4e73df ;">'
-                gra +='<div class="card-body text-center" style="border-radius: 20px;">'
-                gra +='<h1 style="color:#FFFF; font-family:Nunito; font-weight: bold;" >Grafica</h1>'
-                gra +='<hr>'
-                gra +='<div id="mynetwork" style="background: #FFFF ; height: 57rem;"></div>'
-                gra +='</div>'
-                gra +='</div>'
-                gra +='</div>'
-
-                div2.innerHTML = gra
-
-                var container = document.getElementById("mynetwork");
-                var DOTstring = '{'+arbol.dot+'}'
-                var parsedData = vis.parseDOTNetwork(DOTstring);
-                var data = {
-                    nodes: parsedData.nodes,
-                    edges: parsedData.edges
-                }
-                var options = {
-                    nodes: {
-                        widthConstraint: 20,
-                    },        
-                    layout: {
-                        hierarchical: {
-                            levelSeparation: 100,
-                            nodeSpacing: 100,
-                            parentCentralization: true,
-                            direction: 'UD',        // UD, DU, LR, RL
-                            sortMethod: 'directed',  // hubsize, directed
-                            shakeTowards: 'roots'  // roots, leaves                        
-                        },
-                    }, 
-                                            
-                };
-                var network = new vis.Network(container, data, options);
-
-            }else if (opcion=="Evento"){
-                var divv=document.querySelector('#FReg')
-                divv.innerHTML = ''
-                var div2=document.querySelector('#grafico')
-                div2.innerHTML = ''
-                var div=document.querySelector('#FRegg')
-
-                elementos += '<div class="mb-4">'
-                elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">ID Vendedor</label></b>'
-                elementos += '<input type="number" class="form-control" id="idVenn" style="font-family:Nunito; font-weight: bold; text-align: left;">'
-                elementos += '<br><b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">Mes</label></b>'
-                elementos += '<input type="number" class="form-control" id="Mess" style="font-family:Nunito; font-weight: bold; text-align: left;">'
-                elementos += '<br><button onclick="eve()" type="button" class="btn btn-info">Ver</button>'
-                elementos += '</div>'
-
-                div.innerHTML = elementos
-            }
-        }
-    
-        function eliminar(id){
-            //********* Recuperando Objeto **************
-            let arboll=JSON.parse(sessionStorage.arbolP)
-            let arbol = new abb();
-            Object.assign(arbol,arboll)
-            //*******************************************
-            //arbol.PreOrder(arbol.raiz)
-            arbol.dot=''
-            let a = arbol.eliminarr(id,arbol.raiz,arbol.raiz,null,'')
-            console.log(a)
-            if (a=='borrado'||arbol.nodoB=='borrado'){
-                arboll=JSON.parse(sessionStorage.arbolP)
-                arbol = new abb();
-                Object.assign(arbol,arboll)
-            }
-            console.log(arbol.dot)
-
-            let ddot='digraph G{'+arbol.dot+'}'
-            
-            sessionStorage.setItem("arbolP", JSON.stringify(arbol))
-            
-        }
-
-        function eliminarV(id){
-            //********* Recuperando Objeto **************
-            let aAVL=JSON.parse(sessionStorage.avl)
-            let avvl = new arbol_avl();
-            Object.assign(avvl,aAVL)
-            //*******************************************
-            //arbol.PreOrder(arbol.raiz)
-            
-            let a = avvl.eliminar(id,avvl.raiz,avvl.raiz,null)
-            if (avvl.nodoB=='borrado'){
-                print('Vamo a borrar')
-                arboll=JSON.parse(sessionStorage.avl)
-                avvl = new arbol_avl();
-                Object.assign(avvl,arboll)
-            }
-            console.log(avvl.generarDot())
-
-            let ddot=avvl.generarDot()
-            
-            sessionStorage.setItem("avl", JSON.stringify(avvl))
-            
-        }
-
-        function eliminarC(id){
-            
-            var idd=document.querySelector('#idVende').value
-            //********* Recuperando Objeto **************
-            let aAVL=JSON.parse(sessionStorage.avl)
-            let avvl = new arbol_avl();
-            Object.assign(avvl,aAVL)
-            //*******************************************
-            avvl.inicializarClientes(avvl.raiz)
-            
-            //avvl.mostrar(parseInt(idd))
-            
-            avvl.borrarClientes(parseInt(idd),parseInt(id),avvl.raiz)
-            
-            console.log((avvl.generarDotCliente(idd,avvl.raiz)))
-
-            let ddot=avvl.generarDot()
-            
-            sessionStorage.setItem("avl", JSON.stringify(avvl))
-            
-        }
-    </script>
-
-    <script>
-        
-        function client(){
-            var idd=document.querySelector('#idVende').value
+            if (opcion=="Cliente"){
+                var idd=sessionStorage.ID
             console.log(idd)
             var div=document.querySelector('#FReg')
 
@@ -550,10 +283,55 @@
                                                             
             };
             var network = new vis.Network(container, data, options);
+            }else if (opcion=="Evento"){
+                var divv=document.querySelector('#FReg')
+                divv.innerHTML = ''
+                var div2=document.querySelector('#grafico')
+                div2.innerHTML = ''
+                var div=document.querySelector('#FRegg')
+
+                elementos += '<div class="mb-4">'
+                elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">Mes</label></b>'
+                elementos += '<input type="number" class="form-control" id="Mess" style="font-family:Nunito; font-weight: bold; text-align: left;">'
+                elementos += '<br><button onclick="eve()" type="button" class="btn btn-info">Ver</button>'
+                elementos += '</div>'
+
+                div.innerHTML = elementos
+            }
+        }
+    
+
+        function eliminarC(id){
+            
+            var idd=sessionStorage.ID
+            //********* Recuperando Objeto **************
+            let aAVL=JSON.parse(sessionStorage.avl)
+            let avvl = new arbol_avl();
+            Object.assign(avvl,aAVL)
+            //*******************************************
+            avvl.inicializarClientes(avvl.raiz)
+            
+            //avvl.mostrar(parseInt(idd))
+            
+            avvl.borrarClientes(parseInt(idd),parseInt(id),avvl.raiz)
+            
+            console.log((avvl.generarDotCliente(idd,avvl.raiz)))
+
+            let ddot=avvl.generarDot()
+            
+            sessionStorage.setItem("avl", JSON.stringify(avvl))
+            
+        }
+    </script>
+
+    <script>
+        
+        function client(){
+            
         }
 
         function eve(){
-            var idd=document.querySelector('#idVenn').value
+            var idd=sessionStorage.ID
             var mes=document.querySelector('#Mess').value
 
             console.log(idd)
