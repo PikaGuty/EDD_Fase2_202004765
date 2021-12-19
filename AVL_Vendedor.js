@@ -493,7 +493,7 @@ class listaD{
     
     eliminar(valor){
         let aux = this.primero;
-        
+        let ant = null
         while(aux != null){
             if (valor==aux.idC){
                 if (this.primero.idC==aux.idC){ //Eliminar primero
@@ -502,13 +502,14 @@ class listaD{
                     this.primero=aux.siguiente
                 }else if (aux.siguiente==null){ //Eliminar ultimo
                     console.log("Ultimo")
-                    aux.anterior.siguiente=null
+                    ant.siguiente=null
                 }else{  //Eliminar enmedio
-                    aux.anterior.siguiente=aux.siguiente
-                    aux.siguiente.anterior=aux.anterior
+                    ant.siguiente=aux.siguiente
+                    aux.siguiente.anterior=ant
                 }
                 break
             }
+            ant = aux
             aux = aux.siguiente;
         }
     }
