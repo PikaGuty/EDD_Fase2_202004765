@@ -64,6 +64,7 @@
     <script type="text/javascript" src="./ABB_Proveedor.js"></script>
     <script type="text/javascript" src="./AVL_Vendedor.js"></script>
     <script type="text/javascript" src="./ArbolB_Inventario.js"></script>
+    <script type="text/javascript" src="./Hash.js"></script>
     <script src="circular-json.js"></script>
 
     <script>
@@ -71,10 +72,28 @@
             let arbol = new abb();
             let avl = new arbol_avl();
             let inventario = new Arbol_B();
+            let listH = new listaProd();
+            let tablaHH = new hash();
+
             sessionStorage.setItem("arbolP", JSON.stringify(arbol))
             sessionStorage.setItem("avl", CircularJSON.stringify(avl))
             let ivv =CircularJSON.stringify(inventario)
             sessionStorage.setItem("inventario", JSON.stringify(ivv))
+            localStorage.setItem("hash", JSON.stringify(tablaHH))
+
+            
+            /*
+            //********* Recuperando Objeto **************
+            let Th=JSON.parse(localStorage.hash)
+            let TabH = new hash();
+            Object.assign(TabH,Th)
+            //*******************************************
+
+            listH.insertar(7,23);
+            listH.insertar(5,12);
+            TabH.insertar(2,"Vendedor2", "Cliente1",666, listH);
+            TabH.insertar(9,"Vendedor2", "Cliente1",666, listH);
+            console.log(TabH.generar())*/
 
             /*console.log(JSON.stringify(CircularJSON.stringify(ivv)))
             //********* Recuperando Objeto **************

@@ -163,6 +163,8 @@ class Arbol_B{
         this.orden =5;
         this.altura =0;
         this.list=''
+        this.buscado=0
+        this.options=''
     }
 
     insertarN(id,nombre, precio, cantidad){
@@ -296,6 +298,76 @@ class Arbol_B{
             }
 
             this.recorrer(raiz_actual.claves.ultimo.der);
+            
+            return 
+        }   
+    }
+
+    obPrecio(raiz_actual,idProd){
+        
+        let auxx = raiz_actual
+        //********* Recuperando Objeto **************
+        raiz_actual = new pagina()
+        Object.assign(raiz_actual,auxx)
+        //*******************************************
+        if(raiz_actual.claves.primero.izq==null){
+            let aux = raiz_actual.claves.primero;
+            while(aux!=null){
+                if (idProd==aux.id){
+                    this.buscado=parseFloat(aux.precio)
+                }
+                aux= aux.siguiente;
+            }
+            return 
+        }else{
+            let aux = raiz_actual.claves.primero;
+            while(aux!=null){
+                if (idProd==aux.id){
+                    this.buscado=parseFloat(aux.precio)
+                }
+                aux= aux.siguiente;
+            }
+            
+            aux = raiz_actual.claves.primero;
+            while(aux != null){
+                this.obPrecio(aux.izq,idProd);
+                aux = aux.siguiente;
+            }
+
+            this.obPrecio(raiz_actual.claves.ultimo.der,idProd);
+            
+            return 
+        }   
+    }
+
+    obProductos(raiz_actual){
+        
+        let auxx = raiz_actual
+        //********* Recuperando Objeto **************
+        raiz_actual = new pagina()
+        Object.assign(raiz_actual,auxx)
+        //*******************************************
+        if(raiz_actual.claves.primero.izq==null){
+            let aux = raiz_actual.claves.primero;
+            while(aux!=null){
+                this.options+="<option value=\""+aux.id+"\">"+aux.nombre+"</option>"
+                aux= aux.siguiente;
+            }
+            return 
+        }else{
+            let aux = raiz_actual.claves.primero;
+            while(aux!=null){
+                this.options+="<option value=\""+aux.id+"\">"+aux.nombre+"</option>"
+                aux= aux.siguiente;
+            }
+            
+            aux = raiz_actual.claves.primero;
+            while(aux != null){
+                this.obProductos(aux.izq);
+                aux = aux.siguiente;
+            }
+
+            this.obProductos(raiz_actual.claves.ultimo.der);
             
             return 
         }   

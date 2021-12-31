@@ -137,7 +137,7 @@
                     <br>
                     <div class="container mt-5">
                         <div class="row">
-                            <div class="card " style="width: 35rem; margin:0 auto; float: none; margin-bottom: 10px; background: #4e73df;">
+                            <div class="card " style="width: 50rem; margin:0 auto; float: none; margin-bottom: 10px; background: #4e73df;">
                                 <div class="card-body text-center" style="border-radius: 20px;">
                                     <div>
                                         <h1 style="color:#FFFF; font-family:Nunito; font-weight: bold;" >Registrar Usuario</h1>
@@ -149,6 +149,9 @@
                                             &nbsp;&nbsp;&nbsp;&nbsp;
                                             <input type="radio" id="Evento" name="opcion" value="Evento" onchange="Prueba('Evento')">
                                             <label style="color:#FFFF; font-family:Nunito; font-weight: bold;" for="Evento">Evento</label>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;
+                                            <input type="radio" id="Ventas" name="opcion" value="Ventas" onchange="Prueba('Ventas')">
+                                            <label style="color:#FFFF; font-family:Nunito; font-weight: bold;" for="Ventas">Ventas</label>
                                           </div>
                                           <hr>
                                         <div class="mb-6" id="FReg"> 
@@ -211,9 +214,58 @@
 
     <script type="text/javascript" src="./ABB_Proveedor.js"></script>
     <script type="text/javascript" src="./AVL_Vendedor.js"></script>
+    <script type="text/javascript" src="./ArbolB_Inventario.js"></script>
+    <script type="text/javascript" src="./Hash.js"></script>
     <script src="circular-json.js"></script>
 
-
+    <script>       
+        function IngresarVenta(){
+            //********* Recuperando Objeto **************
+            let Th=JSON.parse(localStorage.hash)
+            let TabH = new hash();
+            Object.assign(TabH,Th)
+            //*******************************************
+    
+            //********* Recuperando Objeto **************
+            let lis=JSON.parse(localStorage.lista)
+            let listaH = new listaProd();
+            Object.assign(listaH,lis)
+            //*******************************************
+    
+            //********* Recuperando Objeto **************
+            let inventarioo=JSON.parse(sessionStorage.inventario)
+            inventarioo=CircularJSON.parse(inventarioo)
+            let invent = new Arbol_B();
+            Object.assign(invent,inventarioo)
+            //*******************************************
+    
+            var id = document.querySelector('#idVenta').value
+            var nombreV = sessionStorage.buscar
+            var nombreC = document.querySelector('#nombreCVenta').value
+    
+            let total = 0
+            
+            let js = listaH.json()
+            console.log(js)
+            let json = JSON.parse(js)
+            console.log(json)
+            json.li.forEach(element => {
+                invent.buscado = 0
+                invent.obPrecio(invent.raiz,element.id)
+                total += invent.buscado*element.cantidad
+            });
+                
+    
+            TabH.insertar(id,nombreV, nombreC, total, listaH);
+            console.log(TabH.generar())
+                
+            localStorage.setItem("hash", JSON.stringify(TabH))
+    
+            document.querySelector('#idVenta').value=""
+            document.querySelector('#nombreCVenta').value=""
+                    
+        }
+    </script>
 
 <script>       
     function IngresarC(){
@@ -275,6 +327,7 @@
     <script> //Formulario dinamico para ingreso manual
         
         function Prueba(opcion){
+            
             var elementos=''
             if (opcion=="Cliente"){
                 var div=document.querySelector('#FReg')
@@ -320,7 +373,88 @@
 
 
                 div.innerHTML = elementos
+            }else if (opcion=="Ventas"){
+                
+                let listH = new listaProd();
+                localStorage.setItem("lista", JSON.stringify(listH))
+
+                //********* Recuperando Objeto **************
+                let inventarioo=JSON.parse(sessionStorage.inventario)
+                inventarioo=CircularJSON.parse(inventarioo)
+                let invent = new Arbol_B();
+                Object.assign(invent,inventarioo)
+                //*******************************************
+
+                var div=document.querySelector('#FReg')
+
+                elementos += '<div class="mb-4">'
+                elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">ID</label></b>'
+                elementos += '<input type="number" class="form-control" id="idVenta" style="font-family:Nunito; font-weight: bold; text-align: left;">'
+                elementos += '</div>'
+
+                elementos += '<div class="mb-4">'
+                elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">Nombre Cliente</label></b>'
+                elementos += '<input type="text" class="form-control" id="nombreCVenta" style="font-family:Nunito; font-weight: bold; text-align: left;">'
+                elementos += '</div>'
+
+                elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">VENTA</label></b>'
+                
+                elementos += '<div class="mb-4">'
+                elementos += '<div style="width:370px; float:left;">'
+                elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">Producto</label></b>'
+                elementos += '<select name="cars" style="font-family: Optima; font-family:Nunito; font-weight: bold;" class="form-control" id="Lproductos">'
+                
+                invent.option=''
+                invent.obProductos(invent.raiz)
+                elementos += invent.options
+
+                elementos += '</select>'
+                elementos += '</div>'
+                elementos += '<div style="width:370px; float:right;">'
+                elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">Cantidad</label></b>'
+                elementos += '<input type="number" class="form-control" id="canVenta" style="font-family:Nunito; font-weight: bold; text-align: left;">'
+                elementos += '</div>'
+                elementos += '<button class="btn btn-warning mt-2" onclick="AgProd()" style="font-family:Nunito; font-weight: bold;">Agregar</button>'
+                
+                elementos += '</div>'
+
+                elementos += '<div class="mb-4" id="listaVentas">'
+                elementos += '<textarea id="w3review" disabled="disabled" class="form-control" name="w3review" rows="4" cols="50"style="font-family: Optima; font-family:Nunito; font-weight: bold;">'
+                elementos += '</textarea>'
+                elementos += '</div>'
+
+                elementos += '<button class="btn btn-success mt-2" onclick="IngresarVenta()" style="font-family:Nunito; font-weight: bold;">Ingresar Venta</button>'
+
+
+                div.innerHTML = elementos
             }
+
+        }
+    </script>
+    <script>
+        function AgProd(){
+            var id = document.querySelector('#Lproductos').value
+            var cantidad = document.querySelector('#canVenta').value
+
+            //********* Recuperando Objeto **************
+            let lis=JSON.parse(localStorage.lista)
+            let listaH = new listaProd();
+            Object.assign(listaH,lis)
+            //*******************************************
+            
+            listaH.insertar(id,cantidad);
+
+            let elementos = ''
+            var div=document.querySelector('#listaVentas')
+            elementos += '<textarea id="w3review" disabled="disabled" class="form-control" rows="4" cols="50"style="font-family: Optima; font-family:Nunito; font-weight: bold;">'
+            elementos += listaH.contenido()
+            elementos += '</textarea>'
+            div.innerHTML = elementos
+
+            localStorage.setItem("lista", JSON.stringify(listaH))
+
+            document.querySelector('#canVenta').value=""
+            
         }
     </script>
 

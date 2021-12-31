@@ -162,6 +162,9 @@
                                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                                 <input type="radio" id="Inventario" name="opcion" value="Inventario" onchange="VerA('Inventario')">
                                                 <label style="color:#FFFF; font-family:Nunito; font-weight: bold;" for="Inventario">Inventario</label>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                                <input type="radio" id="Ventas" name="opcion" value="Ventas" onchange="VerA('Ventas')">
+                                                <label style="color:#FFFF; font-family:Nunito; font-weight: bold;" for="Ventas">Ventas</label>
                                               </div>
                                               <hr>
                                               <div class="mb-6" id="FRegg"> 
@@ -228,6 +231,7 @@
     <script type="text/javascript" src="vis-network.min.js"></script>
     <script type="text/javascript" src="./AVL_Vendedor.js"></script>
     <script type="text/javascript" src="./ArbolB_Inventario.js"></script>
+    <script type="text/javascript" src="./Hash.js"></script>
     <script src="circular-json.js"></script>
 
     <script>
@@ -420,8 +424,7 @@
                 elementos += '</div>'
 
                 div.innerHTML = elementos
-            }
-            else if (opcion=="Inventario"){
+            }else if (opcion=="Inventario"){
                 var divv=document.querySelector('#FRegg')
                 divv.innerHTML = ''
                 var div2=document.querySelector('#grafico')
@@ -498,7 +501,82 @@
                 elem +=dot;
                 elem += '</textarea>'
                 div.innerHTML = elem
-            }   
+            }else if (opcion=="Ventas"){
+                var divv=document.querySelector('#FRegg')
+                divv.innerHTML = ''
+                var div=document.querySelector('#FReg')
+
+                elementos += '<table class="table table-striped table-dark">'
+                elementos += '<caption style="color:#FFFF; font-family:Nunito; font-weight: bold;">Tabla Hash de Ventas</caption>'
+                elementos += '<thead>'
+                elementos += '<tr>'
+                elementos += '<th scope="col">Indice</th>'
+                elementos += '<th scope="col">ID</th>'
+                elementos += '<th scope="col">Nombre Vendedor</th>'
+                elementos += '<th scope="col">Nombre Cliente</th>'
+                elementos += '<th scope="col">Total Venta</th>'
+                
+                elementos += '</tr>'
+                elementos += '</thead>'
+                elementos += '<tbody>'
+
+                //********* Recuperando Objeto **************
+                let Th=JSON.parse(localStorage.hash)
+                let TabH = new hash();
+                Object.assign(TabH,Th)
+                //*******************************************
+                
+                elementos += TabH.tabla()
+
+                elementos += '</tbody>'
+                elementos += '</table>'
+                
+                
+                let gra = ''
+                var div2=document.querySelector('#grafico')
+
+                gra += '<div class="row justify-content-center">'
+                gra +='<div class="card " style="width: 60rem; height: 65rem; margin:0 auto; float: none; margin-bottom: 10px; background: #4e73df ;">'
+                gra +='<div class="card-body text-center" style="border-radius: 20px;">'
+                gra +='<h1 style="color:#FFFF; font-family:Nunito; font-weight: bold;" >Grafica</h1>'
+                gra +='<hr>'
+                gra +='<div id="mynetwork" style="background: #FFFF ; height: 57rem;"></div>'
+                gra +='</div>'
+                gra +='</div>'
+                gra +='</div>'
+                
+                var div2=document.querySelector('#grafico')
+                
+                div2.innerHTML = gra
+
+                let dot =TabH.generar()
+
+                var container = document.getElementById("mynetwork");
+                var DOTstring = dot
+                var parsedData = vis.parseDOTNetwork(DOTstring);
+                var data = {
+                    nodes: parsedData.nodes,
+                    edges: parsedData.edges
+                }
+                var options = {
+                    nodes: {
+                        widthConstraint: 20,
+                    },        
+                    layout: {
+                        
+                    }, 
+                                            
+                };
+                var network = new vis.Network(container, data, options);
+
+                
+                let elem = '<hr><h1 style="color:#FFFF; font-family:Nunito; font-weight: bold;" >DOT</h1><hr>'
+                elem += '<textarea class="form-control" style=" font-family:Nunito; font-weight: bold;" rows="20">'
+                elem +=dot;
+                elem += '</textarea>'
+                elementos += elem
+                div.innerHTML = elementos
+            }  
         }
     
         function eliminar(id){
