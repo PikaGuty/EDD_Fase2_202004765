@@ -153,6 +153,10 @@
                                             &nbsp;&nbsp;&nbsp;&nbsp;
                                             <input type="radio" id="Evento" name="opcion" value="Evento" onchange="Prueba('Evento')">
                                             <label style="color:#FFFF; font-family:Nunito; font-weight: bold;" for="Evento">Evento</label>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;
+                                            <input type="radio" id="Inventario" name="opcion" value="Inventario" onchange="Prueba('Inventario')">
+                                            <label style="color:#FFFF; font-family:Nunito; font-weight: bold;" for="Inventario">Inventario</label>
+
                                           </div>
                                           <hr>
                                         <div class="mb-6" id="FReg"> 
@@ -193,6 +197,9 @@
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         <input type="radio" id="EventoM" name="opcionM" value="EventoM" >
                                         <label style="color:#FFFF; font-family:Nunito; font-weight: bold;" for="EventoM">Evento</label>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="radio" id="InventarioM" name="opcionM" value="InventarioM">
+                                        <label style="color:#FFFF; font-family:Nunito; font-weight: bold;" for="InventarioM">Inventario</label>
                                     </div>
                                     <hr>
                                     
@@ -254,6 +261,7 @@
 
     <script type="text/javascript" src="./ABB_Proveedor.js"></script>
     <script type="text/javascript" src="./AVL_Vendedor.js"></script>
+    <script type="text/javascript" src="./ArbolB_Inventario.js"></script>
     <script src="circular-json.js"></script>
 
     <script>       
@@ -374,6 +382,34 @@
     }
 </script>
 
+<script>       
+    function IngresarI(){
+        //********* Recuperando Objeto **************
+        let inventarioo=JSON.parse(sessionStorage.inventario)
+        inventarioo=CircularJSON.parse(inventarioo)
+        let invent = new Arbol_B();
+        Object.assign(invent,inventarioo)
+        //*******************************************
+
+        var id = document.querySelector('#idI').value
+        var nombre = document.querySelector('#nombreI').value
+        var precio = document.querySelector('#precioI').value
+        var cantidad = document.querySelector('#cantidadI').value
+        
+        invent.insertarN(parseInt(id),nombre, parseFloat(precio), parseInt(cantidad));
+        invent.recorrer(invent.raiz)
+        console.log(invent.graficar());
+
+        let ivv =CircularJSON.stringify(invent)
+        sessionStorage.setItem("inventario", JSON.stringify(ivv))
+
+        document.querySelector('#idI').value=""
+        document.querySelector('#precioI').value=""
+        document.querySelector('#nombreI').value=""
+        document.querySelector('#cantidadI').value=""
+    }
+</script>
+
     <script> //Formulario dinamico para ingreso manual
         async function loadFile(file) {
             let text = await file.text();
@@ -469,6 +505,29 @@
                     //avvl.mostrarEvento(1,avvl.raiz,12)
                     
                     sessionStorage.setItem("avl", CircularJSON.stringify(avvl))
+                    
+                }catch(error){
+                    alert(error)
+                    alert("Verifique el archivo")
+                }
+                
+            }else if (document.getElementById('InventarioM').checked){
+                try{
+                    //********* Recuperando Objeto **************
+                    let inventarioo=JSON.parse(sessionStorage.inventario)
+                    inventarioo=CircularJSON.parse(inventarioo)
+                    let invent = new Arbol_B();
+                    Object.assign(invent,inventarioo)
+                    //*******************************************
+                    
+                    let json = JSON.parse(text)
+                    json.productos.forEach(element => {
+                        invent.insertarN(parseInt(element.id),element.nombre, parseFloat(element.precio), parseInt(element.cantidad));
+                    });
+                    
+                    
+                    let ivv =CircularJSON.stringify(invent)
+                    sessionStorage.setItem("inventario", JSON.stringify(ivv))
                     
                 }catch(error){
                     alert(error)
@@ -596,6 +655,32 @@
 
                 elementos += '<button class="btn btn-success mt-2" onclick="IngresarE()" style="font-family:Nunito; font-weight: bold;">Ingresar Evento</button>'
 
+
+                div.innerHTML = elementos
+            }else if (opcion=="Inventario"){
+                var div=document.querySelector('#FReg')
+
+                elementos += '<div class="mb-4">'
+                elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">ID</label></b>'
+                elementos += '<input type="number" class="form-control" id="idI" style="font-family:Nunito; font-weight: bold; text-align: left;">'
+                elementos += '</div>'
+
+                elementos += '<div class="mb-4">'
+                elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">Nombre</label></b>'
+                elementos += '<input type="text" class="form-control" id="nombreI" style="font-family:Nunito; font-weight: bold; text-align: left;">'
+                elementos += '</div>'
+
+                elementos += '<div class="mb-4">'
+                elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">Precio</label></b>'
+                elementos += '<input type="number" class="form-control" id="precioI" style="font-family:Nunito; font-weight: bold; text-align: left;">'
+                elementos += '</div>'
+
+                elementos += '<div class="mb-4">'
+                elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">Cantidad</label></b>'
+                elementos += '<input type="number" class="form-control" id="cantidadI" style="font-family:Nunito; font-weight: bold; text-align: left;">'
+                elementos += '</div>'
+
+                elementos += '<button class="btn btn-success mt-2" onclick="IngresarI()" style="font-family:Nunito; font-weight: bold;">Ingresar Proveedor</button>'
 
                 div.innerHTML = elementos
             }

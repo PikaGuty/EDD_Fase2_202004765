@@ -63,20 +63,37 @@
 
     <script type="text/javascript" src="./ABB_Proveedor.js"></script>
     <script type="text/javascript" src="./AVL_Vendedor.js"></script>
+    <script type="text/javascript" src="./ArbolB_Inventario.js"></script>
     <script src="circular-json.js"></script>
 
     <script>
         function Inicializar(){ //Inicializando Variables
             let arbol = new abb();
             let avl = new arbol_avl();
+            let inventario = new Arbol_B();
             sessionStorage.setItem("arbolP", JSON.stringify(arbol))
-            
             sessionStorage.setItem("avl", CircularJSON.stringify(avl))
+            let ivv =CircularJSON.stringify(inventario)
+            sessionStorage.setItem("inventario", JSON.stringify(ivv))
+
+            /*console.log(JSON.stringify(CircularJSON.stringify(ivv)))
+            //********* Recuperando Objeto **************
+            let inventarioo=JSON.parse(sessionStorage.inventario)
+            inventarioo=CircularJSON.parse(inventarioo)
+            let invent = new Arbol_B();
+            Object.assign(invent,inventarioo)
+            //*******************************************
+
+            console.log(invent)*/
+
             
-            //avl.insertar(10, 'Saul', 20, 'saul@gmail.com', '1234');
-            //avl.insertarCliente(10,avl.raiz,2,"Javier","javier@gmail.com")
-            //avl.insertarMes(10,avl.raiz,12)
-            //avl.insertarEvento(10, avl.raiz, 12, "Comida8",10,"13:00");
+            /*invent.insertarN(5,"Leche", 25.00, 3);
+            invent.insertarN(1,"Queso", 35.50, 30);
+            invent.insertarN(7,"Tortrix barbacoa", 5.00, 500);
+            invent.insertarN(3,"Tortrix picante", 5.00, 400);
+            console.log(invent.graficar());
+            invent.recorrer(invent.raiz)
+            sessionStorage.setItem("inventario", CircularJSON.stringify(invent))*/
 
             /*
             //********* Recuperando Objeto **************
@@ -88,30 +105,7 @@
             avvl.inicializarMes(avvl.raiz)
             avvl.inicializarCalendario(avvl.raiz)
             //*******************************************
-
-            avvl.insertar(20, 'Oscar', 21, 'oscar@gmail.com', '1234');
-            avvl.insertar(30, 'Javier', 20, 'javier@gmail.com', '1234');
-
-            avvl.PreOrder(avvl.raiz);
-            
-            avvl.insertarCliente(10,avvl.raiz,3,"Javier","javier@gmail.com")
-            avvl.insertarCliente(10,avvl.raiz,4,"Javier","javier@gmail.com")
-            avvl.mostrarClientes(10,avvl.raiz) 
-
-            avvl.buscar(20,avvl.raiz)
-            console.log(avvl.busc)
-
-            avvl.insertarMes(10,avvl.raiz,1)
-            avvl.insertarEvento(10, avvl.raiz, 12, "Comida6",5,"15:00");
-
-            console.log(avvl.generarDot());
-            console.log(avvl.generarDotCliente(10,avvl.raiz));
-            avvl.mostrarEvento(10,avvl.raiz,12)
-
-            avvl.graficarMes(10,avvl.raiz,12)
-            console.log(avvl.dotM)
-
-            sessionStorage.setItem("avl", CircularJSON.stringify(avvl))*/
+            */
 
         }
         function Ingresar(){
