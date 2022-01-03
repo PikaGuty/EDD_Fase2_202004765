@@ -65,6 +65,7 @@
     <script type="text/javascript" src="./AVL_Vendedor.js"></script>
     <script type="text/javascript" src="./ArbolB_Inventario.js"></script>
     <script type="text/javascript" src="./Hash.js"></script>
+    <script type="text/javascript" src="./Grafo.js"></script>
     <script src="circular-json.js"></script>
 
     <script>
@@ -74,14 +75,34 @@
             let inventario = new Arbol_B();
             let listH = new listaProd();
             let tablaHH = new hash();
+            let grafoo = new grafo();
 
             sessionStorage.setItem("arbolP", JSON.stringify(arbol))
             sessionStorage.setItem("avl", CircularJSON.stringify(avl))
             let ivv =CircularJSON.stringify(inventario)
             sessionStorage.setItem("inventario", JSON.stringify(ivv))
             localStorage.setItem("hash", JSON.stringify(tablaHH))
+            let graf =CircularJSON.stringify(grafoo)
+            localStorage.setItem("rutas", JSON.stringify(graf))
 
-            
+            /*grafoo.insertar(4,"Bodega1");
+            grafoo.insertar(6,"Bodega2");
+            grafoo.agregar_adyacente(4,6,"Bodega2",5);
+            grafoo.agregar_adyacente(6,4,"Bodega1",5);
+
+            //********* Recuperando Objeto **************
+            let graa=JSON.parse(localStorage.rutas)
+            graa=CircularJSON.parse(graa)
+            let graff = new grafo();
+            Object.assign(graff,graa)
+            //*******************************************
+
+            graff.insertar(9,"Bodega3");
+            graff.agregar_adyacente(6,9,"Bodega3",2);
+            graff.agregar_adyacente(9,6,"Bodega2",2);
+
+            graff.graficar();*/
+
             /*
             //********* Recuperando Objeto **************
             let Th=JSON.parse(localStorage.hash)

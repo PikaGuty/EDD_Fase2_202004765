@@ -165,7 +165,10 @@
                                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                                 <input type="radio" id="Ventas" name="opcion" value="Ventas" onchange="VerA('Ventas')">
                                                 <label style="color:#FFFF; font-family:Nunito; font-weight: bold;" for="Ventas">Ventas</label>
-                                              </div>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                                <input type="radio" id="Rutas" name="opcion" value="Rutas" onchange="VerA('Rutas')">
+                                                <label style="color:#FFFF; font-family:Nunito; font-weight: bold;" for="Rutas">Rutas</label>
+                                            </div>
                                               <hr>
                                               <div class="mb-6" id="FRegg"> 
                                             </div>
@@ -232,6 +235,7 @@
     <script type="text/javascript" src="./AVL_Vendedor.js"></script>
     <script type="text/javascript" src="./ArbolB_Inventario.js"></script>
     <script type="text/javascript" src="./Hash.js"></script>
+    <script type="text/javascript" src="./Grafo.js"></script>
     <script src="circular-json.js"></script>
 
     <script>
@@ -576,7 +580,87 @@
                 elem += '</textarea>'
                 elementos += elem
                 div.innerHTML = elementos
-            }  
+            } 
+            else if (opcion=="Rutas"){
+                //********* Recuperando Objeto **************
+                let graaf=JSON.parse(localStorage.rutas)
+                graaf=CircularJSON.parse(graaf)
+                let graff = new grafo();
+                Object.assign(graff,graaf)
+                //*******************************************
+
+                var divv=document.querySelector('#FRegg')
+                divv.innerHTML = ''
+
+                var div=document.querySelector('#FReg')
+
+                let elementos=''
+                elementos += '<div class="mb-4">'
+                elementos += '<div style="width:450px; float:left;">'
+                elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">NodoInicial</label></b>'
+                elementos += '<select name="cars" style="font-family: Optima; font-family:Nunito; font-weight: bold;" class="form-control" id="NInicial">'
+                elementos += graff.obtener()
+                elementos += '</select>'
+                elementos += '</div>'
+                elementos += '<div style="width:450px; float:right;">'
+                elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">Nodo Final</label></b>'
+                elementos += '<select name="cars" style="font-family: Optima; font-family:Nunito; font-weight: bold;" class="form-control" id="NFinal">'
+                elementos += graff.obtener()
+                elementos += '</select>'
+                elementos += '</div>'
+                elementos += '</div><br><br><br><br>'
+
+                elementos += '<button class="btn btn-success mt-2" onclick="CRuta()" style="font-family:Nunito; font-weight: bold;">Calcular Ruta</button>'
+
+                div.innerHTML = elementos
+
+                
+                
+                let gra = ''
+                var div2=document.querySelector('#grafico')
+
+                gra += '<div class="row justify-content-center">'
+                gra +='<div class="card " style="width: 60rem; height: 65rem; margin:0 auto; float: none; margin-bottom: 10px; background: #4e73df ;">'
+                gra +='<div class="card-body text-center" style="border-radius: 20px;">'
+                gra +='<h1 style="color:#FFFF; font-family:Nunito; font-weight: bold;" >Grafica</h1>'
+                gra +='<hr>'
+                gra +='<div id="mynetwork" style="background: #FFFF ; height: 57rem;"></div>'
+                gra +='</div>'
+                gra +='</div>'
+                gra +='</div>'
+                
+                var div2=document.querySelector('#grafico')
+                
+                div2.innerHTML = gra
+
+                let dot =graff.graficar()
+
+                var container = document.getElementById("mynetwork");
+                var DOTstring = dot
+                var parsedData = vis.parseDOTNetwork(DOTstring);
+                var data = {
+                    nodes: parsedData.nodes,
+                    edges: parsedData.edges
+                }
+                var options = {
+                    nodes: {
+                        widthConstraint: 20,
+                    },        
+                    layout: {
+                        
+                    }, 
+                                            
+                };
+                var network = new vis.Network(container, data, options);
+
+                
+                let elem = '<hr><h1 style="color:#FFFF; font-family:Nunito; font-weight: bold;" >DOT</h1><hr>'
+                elem += '<textarea class="form-control" style=" font-family:Nunito; font-weight: bold;" rows="20">'
+                elem +=dot;
+                elem += '</textarea>'
+                elementos += elem
+                div.innerHTML = elementos
+            } 
         }
     
         function eliminar(id){
@@ -647,6 +731,108 @@
             
         }
     </script>
+
+<script>       
+    function CRuta(){
+        //********* Recuperando Objeto **************
+        let graa=JSON.parse(localStorage.rutas)
+        graa=CircularJSON.parse(graa)
+        let graff = new grafo();
+        Object.assign(graff,graa)
+        //*******************************************
+
+        var NInicio = document.querySelector('#NInicial').value
+        var NFinal = document.querySelector('#NFinal').value
+        let re=graff.Cruta(NInicio,NFinal)
+        
+
+        var divv=document.querySelector('#FRegg')
+        divv.innerHTML = ''
+
+        var div=document.querySelector('#FReg')
+
+        let elementos=''
+        elementos += '<div class="mb-4">'
+        elementos += '<div style="width:450px; float:left;">'
+        elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">NodoInicial</label></b>'
+        elementos += '<select name="cars" style="font-family: Optima; font-family:Nunito; font-weight: bold;" class="form-control" id="NInicial">'
+        elementos += graff.obtener()
+        elementos += '</select>'
+        elementos += '</div>'
+        elementos += '<div style="width:450px; float:right;">'
+        elementos += '<b><label class="form-label" style="font-family: Optima; color:#FFFF; font-family:Nunito; font-weight: bold;"">Nodo Final</label></b>'
+        elementos += '<select name="cars" style="font-family: Optima; font-family:Nunito; font-weight: bold;" class="form-control" id="NFinal">'
+        elementos += graff.obtener()
+        elementos += '</select>'
+        elementos += '</div>'
+        elementos += '</div><br><br><br><br>'
+
+        elementos += '<button class="btn btn-success mt-2" onclick="CRuta()" style="font-family:Nunito; font-weight: bold;">Calcular Ruta</button>'
+        
+        elementos+='<hr><h3 style="color:#FFFF; font-family:Nunito; font-weight: bold;" >'
+        let p = true
+        re.forEach(element => {
+            if (p){
+                elementos+=element+''
+                p=false
+            }else
+                elementos+="->"+element
+        });
+        elementos += '</h3><hr>'
+        div.innerHTML = elementos
+
+        
+        
+        let gra = ''
+        var div2=document.querySelector('#grafico')
+
+        gra += '<div class="row justify-content-center">'
+        gra +='<div class="card " style="width: 60rem; height: 65rem; margin:0 auto; float: none; margin-bottom: 10px; background: #4e73df ;">'
+        gra +='<div class="card-body text-center" style="border-radius: 20px;">'
+        gra +='<h1 style="color:#FFFF; font-family:Nunito; font-weight: bold;" >Grafica</h1>'
+        gra +='<hr>'
+        gra +='<div id="mynetwork" style="background: #FFFF ; height: 57rem;"></div>'
+        gra +='</div>'
+        gra +='</div>'
+        gra +='</div>'
+        
+        var div2=document.querySelector('#grafico')
+        
+        div2.innerHTML = gra
+
+        let dot =graff.graficarL(re)
+
+        var container = document.getElementById("mynetwork");
+        var DOTstring = dot
+        var parsedData = vis.parseDOTNetwork(DOTstring);
+        var data = {
+            nodes: parsedData.nodes,
+            edges: parsedData.edges
+        }
+        var options = {
+            nodes: {
+                widthConstraint: 20,
+            },        
+            layout: {
+                
+            }, 
+                                    
+        };
+        var network = new vis.Network(container, data, options);
+
+        
+        let elem = '<hr><h1 style="color:#FFFF; font-family:Nunito; font-weight: bold;" >DOT</h1><hr>'
+        elem += '<textarea class="form-control" style=" font-family:Nunito; font-weight: bold;" rows="20">'
+        elem +=dot;
+        elem += '</textarea>'
+        elementos += elem
+        div.innerHTML = elementos
+
+        document.querySelector('#NInicial').value=""
+        document.querySelector('#NFinal').value=""
+
+    }
+</script>
 
     <script>
         

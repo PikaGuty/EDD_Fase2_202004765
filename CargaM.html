@@ -205,6 +205,9 @@
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         <input type="radio" id="VentasM" name="opcionM" value="VentasM">
                                         <label style="color:#FFFF; font-family:Nunito; font-weight: bold;" for="VentasM">Ventas</label>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="radio" id="RutasM" name="opcionM" value="RutasM">
+                                        <label style="color:#FFFF; font-family:Nunito; font-weight: bold;" for="RutasM">Rutas</label>
                                     </div>
                                     <hr>
                                     
@@ -268,6 +271,7 @@
     <script type="text/javascript" src="./AVL_Vendedor.js"></script>
     <script type="text/javascript" src="./ArbolB_Inventario.js"></script>
     <script type="text/javascript" src="./Hash.js"></script>
+    <script type="text/javascript" src="./Grafo.js"></script>
     <script src="circular-json.js"></script>
 
     <script>       
@@ -631,6 +635,41 @@
                     alert("Verifique el archivo")
                 }
                 
+            }else if (document.getElementById('RutasM').checked){
+                //try{
+                    //********* Recuperando Objeto **************
+                    let graa=JSON.parse(localStorage.rutas)
+                    graa=CircularJSON.parse(graa)
+                    let graff = new grafo();
+                    Object.assign(graff,graa)
+                    //*******************************************
+
+                    let json = JSON.parse(text)
+                    json.rutas.forEach(element => {
+                        graff.insertar(parseInt(element.id),element.nombre);
+                        element.adyacentes.forEach(elementt => {
+                            graff.insertar(parseInt(elementt.id),elementt.nombre);
+                        });
+                    });
+
+                    //graff.mostrar()
+
+                    json = JSON.parse(text)
+                    json.rutas.forEach(element => {
+                        element.adyacentes.forEach(elementt => {
+                            graff.agregar_adyacente(parseInt(element.id),parseInt(elementt.id),elementt.nombre,parseInt(elementt.distancia));
+                        });
+                    });
+                    graff.graficar();
+
+                    let graf =CircularJSON.stringify(graff)
+                    localStorage.setItem("rutas", JSON.stringify(graf))
+                    
+                /*}catch(error){
+                    alert(error)
+                    alert("Verifique el archivo")
+                }*/
+                
             }
             
 
@@ -755,6 +794,7 @@
 
                 div.innerHTML = elementos
             }else if (opcion=="Inventario"){
+
                 var div=document.querySelector('#FReg')
 
                 elementos += '<div class="mb-4">'
