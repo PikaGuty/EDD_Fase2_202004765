@@ -156,6 +156,42 @@ class arbol_avl{
         }
     }
 
+    TablaDesenc(raizA,k){
+        var iv  = CryptoJS.enc.Base64.parse("");
+        var key=CryptoJS.SHA256(k);
+
+        if (raizA!=null){
+            var desCorreo=this.decryptData(raizA.correo,iv,key);
+            var desPassword=this.decryptData(raizA.pass,iv,key);
+            console.log(desCorreo)
+            
+            this.TablaDesenc(raizA.izq,k);
+            this.tab += '<tr>'
+            this.tab += '<td>'+raizA.id+'</td>'
+            this.tab += '<td>'+raizA.nombre+'</td>'
+            this.tab += '<td>'+raizA.edad+'</td>'
+            this.tab += '<td>'+desCorreo+'</td>'
+            this.tab += '<td>'+desPassword+'</td>'
+            
+            this.tab += '<td>'
+            this.tab += '<button value=\"'+raizA.id+'\" onclick="eliminarV(this.value);VerA(\'Vendedor\');" style="background-color:#C82807 " type="button" class="btn btn-outline-dark"><i class="fas fa-trash"></i></button> </td>'
+            this.tab += '</tr>'
+            
+            
+            this.TablaDesenc(raizA.der,k);
+        }
+    }
+    
+
+    decryptData(encrypted,iv,key){
+        var decrypted = CryptoJS.AES.decrypt(encrypted, key, {
+                iv: iv,
+                mode: CryptoJS.mode.CBC,
+                padding: CryptoJS.pad.Pkcs7
+            });
+        return decrypted.toString(CryptoJS.enc.Utf8)
+    }
+
     buscar (id,raizA){
         console.log("Entre a buscar")
         if (raizA !=null){

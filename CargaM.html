@@ -272,6 +272,8 @@
     <script type="text/javascript" src="./ArbolB_Inventario.js"></script>
     <script type="text/javascript" src="./Hash.js"></script>
     <script type="text/javascript" src="./Grafo.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9/sha256.js"></script>
     <script src="circular-json.js"></script>
 
     <script>       
@@ -309,11 +311,13 @@
 
 <script>       
     function IngresarV(){
+        let keyy = prompt("Porfavor ingrese la clave", "");
         //********* Recuperando Objeto **************
         let aAVL=JSON.parse(sessionStorage.avl)
+        aAVL=CircularJSON.parse(aAVL)
         let avvl = new arbol_avl();
         Object.assign(avvl,aAVL)
-        //*******************************************
+        //******************************************
 
         var id = document.querySelector('#idV').value
         var nombre = document.querySelector('#nombreV').value
@@ -321,10 +325,16 @@
         var correo = document.querySelector('#correoV').value
         var password = document.querySelector('#passwordV').value
 
-        avvl.insertar(parseInt(id),nombre,edad,correo,password);
+        var cCorreo=correo
+        var cPassword=password
+        var iv  = CryptoJS.enc.Base64.parse("");
+        var key=CryptoJS.SHA256(keyy);
+
+        avvl.insertar(parseInt(id),nombre,edad,encryptData(cCorreo,iv,key),encryptData(cPassword,iv,key));
         avvl.PreOrder(avvl.raiz)
 
-        sessionStorage.setItem("avl", CircularJSON.stringify(avvl))
+        let avvvl =CircularJSON.stringify(avvl)
+        sessionStorage.setItem("avl", JSON.stringify(avvvl))
 
         document.querySelector('#idV').value=""
         document.querySelector('#nombreV').value=""
@@ -479,17 +489,26 @@
             div.innerHTML = 'Contenido'
             if(document.getElementById('VendedorM').checked) {
                 try{
+                    let keyy = prompt("Porfavor ingrese la clave", "");
                     //********* Recuperando Objeto **************
                     let aAVL=JSON.parse(sessionStorage.avl)
+                    aAVL=CircularJSON.parse(aAVL)
                     let avvl = new arbol_avl();
                     Object.assign(avvl,aAVL)
-                    //*******************************************
-
+                    //******************************************
+                    
                     let json = JSON.parse(text)
-                    json.vendedores.forEach(element => avvl.insertar(parseInt(element.id),element.nombre,element.edad,element.correo,element.password));
+                    json.vendedores.forEach(element => {
+                        var cCorreo=element.correo
+                        var cPassword=element.password
+                        var iv  = CryptoJS.enc.Base64.parse("");
+                        var key=CryptoJS.SHA256(keyy);
+                        avvl.insertar(parseInt(element.id),element.nombre,element.edad,encryptData(cCorreo,iv,key),encryptData(cPassword,iv,key))
+                    });
                     avvl.PreOrder(avvl.raiz)
 
-                    sessionStorage.setItem("avl", CircularJSON.stringify(avvl))
+                    let avvvl =CircularJSON.stringify(avvl)
+                    sessionStorage.setItem("avl", JSON.stringify(avvvl))
                 }catch(error){
                     alert("Verifique el archivo")
                 }
@@ -903,6 +922,26 @@
 
             document.querySelector('#canVenta').value=""
             
+        }
+    </script>
+
+    <script>
+        function encryptData(data,iv,key){
+            if(typeof data=="string"){
+                data=data.slice();
+                encryptedString = CryptoJS.AES.encrypt(data, key, {
+                    iv: iv,
+                    mode: CryptoJS.mode.CBC,
+                    padding: CryptoJS.pad.Pkcs7
+                });
+            }else{
+                encryptedString = CryptoJS.AES.encrypt(JSON.stringify(data), key, {
+                    iv: iv,
+                    mode: CryptoJS.mode.CBC,
+                    padding: CryptoJS.pad.Pkcs7
+                });  
+            }
+            return encryptedString.toString();
         }
     </script>
 
