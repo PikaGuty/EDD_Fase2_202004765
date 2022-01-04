@@ -95,6 +95,7 @@ class grafo{
     }
 
     Cruta(nodo_Inicial,NodoFinal){
+        
         let NodoI=this.buscar(nodo_Inicial)
         
         let auxx = NodoI
@@ -106,20 +107,63 @@ class grafo{
         NodoI.etiqueta = {"dis":0,"ant":null,"iter":0}
         let aux = NodoI
         let recorridos= []
+        let analizao = []
         while(aux != null){
             let aux2 = aux.adyasentes.primero; 
-            recorridos.push(aux.id)
             while(aux2 != null){
                 if (!recorridos.includes(aux2.id)){
                     let ac = this.buscar(aux2.id)
-                    console.log(ac.etiqueta+">"+(aux2.ponderacion+aux.etiqueta.dis))
-                    if (ac.etiqueta==null){
-                        ac.etiqueta = {"dis":(aux2.ponderacion+aux.etiqueta.dis),"ant":aux.id,"iter":aux.etiqueta.iter+1}
-                    }else if (ac.etiqueta.dis>(aux2.ponderacion+aux.etiqueta.dis)){
-                        ac.etiqueta = {"dis":(aux2.ponderacion+aux.etiqueta.dis),"ant":aux.id,"iter":aux.etiqueta.iter+1}
+                    //console.log("Bodega "+aux.id+' hacia bodega'+aux2.id)
+                    try{
+                        if (ac.etiqueta==null){
+                            ac.etiqueta = {"dis":(aux2.ponderacion+aux.etiqueta.dis),"ant":aux.id,"iter":aux.etiqueta.iter+1}
+                        }else if (ac.etiqueta.dis>(aux2.ponderacion+aux.etiqueta.dis)){
+                            ac.etiqueta = {"dis":(aux2.ponderacion+aux.etiqueta.dis),"ant":aux.id,"iter":aux.etiqueta.iter+1}
+                        }else{
+    
+                        }
+                        recorridos.push(aux.id)
+                        analizao.push(aux.id)
+                    }catch{
+                       break
                     }
                 }
                 aux2 = aux2.siguiente;
+            }
+            if (this.cont(NodoI.id)<0.5){
+                console.log("sig")
+                aux = aux.siguiente;
+            }else{
+                console.log("ant")
+                aux = aux.anterior
+            }
+            
+        }
+
+        aux = this.primero
+        
+        
+        while(aux != null){
+            if (!analizao.includes(aux.id)){
+                console.log(aux.id)
+                let aux2 = aux.adyasentes.primero; 
+                
+                while(aux2 != null){
+                    if (!recorridos.includes(aux2.id)){
+                        let ac = this.buscar(aux2.id)
+                        //console.log("Bodega "+aux.id+' hacia bodega'+aux2.id)
+                        console.log(aux.etiqueta.dis)
+                        if (ac.etiqueta==null){
+                            ac.etiqueta = {"dis":(aux2.ponderacion+aux.etiqueta.dis),"ant":aux.id,"iter":aux.etiqueta.iter+1}
+                        }else if (ac.etiqueta.dis>(aux2.ponderacion+aux.etiqueta.dis)){
+                            ac.etiqueta = {"dis":(aux2.ponderacion+aux.etiqueta.dis),"ant":aux.id,"iter":aux.etiqueta.iter+1}
+                        }else{
+                            
+                        }
+                        recorridos.push(aux.id)
+                    }
+                    aux2 = aux2.siguiente;
+                }
             }
             aux = aux.siguiente;
         }
@@ -133,6 +177,40 @@ class grafo{
         reco.unshift(NodoI.id)
         console.log(reco)
         return reco
+    }
+
+    cont(id){
+        let n = 0
+        let aux = this.primero;
+        let tot = 0
+        while(aux != null){
+            tot++
+            aux = aux.siguiente;
+        }
+        aux = this.primero;
+        while(aux != null){
+            if(aux.id == id){
+                return n/tot;
+            }else{
+                n++
+                aux = aux.siguiente;
+            }
+        }
+        console.log("No se encontro")
+        return null;
+    }
+
+    mos(){
+        let aux = this.primero;
+        while(aux != null){
+            console.log(aux.id);
+            let aux2 = aux.adyasentes.primero;
+            while(aux2 != null){
+                console.log("   -"+aux2.id);
+                aux2 = aux2.siguiente;
+            }
+            aux = aux.siguiente;
+        }
     }
 
     mostrar(){
