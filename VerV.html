@@ -327,8 +327,8 @@
                 Object.assign(TabH,Th)
                 //*******************************************
                 
-                elementos += TabH.tabla()
-
+                elementos += TabH.tablaN(sessionStorage.buscar)
+ 
                 elementos += '</tbody>'
                 elementos += '</table>'
                 
@@ -350,7 +350,7 @@
                 
                 div2.innerHTML = gra
 
-                let dot =TabH.generar()
+                let dot =TabH.generarN(sessionStorage.buscar)
 
                 var container = document.getElementById("mynetwork");
                 var DOTstring = dot

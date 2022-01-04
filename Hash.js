@@ -130,6 +130,22 @@ class hash{
         return tab
     }
 
+    tablaN(nom){
+        let tab = ''
+        for(var i =0;i<this.size;i++){
+            if(this.claves[i]!=null && this.claves[i].nombreV==nom){
+                tab += '<tr>'
+                tab += '<td>'+i+'</td>'
+                tab += '<td>'+this.claves[i].id+'</td>'
+                tab += '<td>'+this.claves[i].nombreV+'</td>'
+                tab += '<td>'+this.claves[i].nombreC+'</td>'
+                tab += '<td>'+this.claves[i].totalVenta+'</td>'
+                tab += '</tr>'
+            }
+        }
+        return tab
+    }
+
     generar(){
         let dot = "digraph Hash{\n";
         dot += "node [shape=box];\n";
@@ -170,6 +186,47 @@ class hash{
         
         for(var i =0;i<this.size;i++){
             if(this.claves[i]!=null){
+                dot+=this.claves[i].listProductos.generar(i)
+            }
+        }
+        dot += "}";
+        return dot
+    }
+
+    generarN(nom){
+        let dot = "digraph Hash{\n";
+        dot += "node [shape=box];\n";
+
+        for(var i =0;i<this.size;i++){
+            if(this.claves[i]!=null && this.claves[i].nombreV==nom){
+                dot += "U"+i+" [label = \""+i+"\\n idVenta: "+this.claves[i].id+"\\n"+this.claves[i].nombreV+" -> "+this.claves[i].nombreC+"\\n Total Q"+this.claves[i].totalVenta+"\" width = 1.5, group = 1 ];\n"
+            }
+        }
+        for(var i =0;i<this.size;i++){
+            if (i==this.size-1){
+                if(this.claves[i]!=null && this.claves[i].nombreV==nom){
+                    dot += "U"+i+"\n"
+                }
+            }else{
+                if(this.claves[i]!=null && this.claves[i].nombreV==nom){
+                    dot += "U"+i+"->"
+                }
+            }
+            
+        }
+        for(var i =0;i<this.size;i++){
+            if(this.claves[i]!=null && this.claves[i].nombreV==nom){
+                let auxx = this.claves[i].listProductos
+                //********* Recuperando Objeto **************
+                this.claves[i].listProductos = new listaProd()
+                Object.assign(this.claves[i].listProductos,auxx)
+                //*******************************************
+                
+            }
+        }
+        
+        for(var i =0;i<this.size;i++){
+            if(this.claves[i]!=null && this.claves[i].nombreV==nom){
                 dot+=this.claves[i].listProductos.generar(i)
             }
         }
